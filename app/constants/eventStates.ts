@@ -1,0 +1,1 @@
+export const EVENT_STATUSES = ['COMPLETED', 'SCHEDULED'];
