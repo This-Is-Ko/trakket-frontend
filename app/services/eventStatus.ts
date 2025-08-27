@@ -1,4 +1,3 @@
-// services/eventStatus.ts
 import api from "./api";
 
 export interface UpdateStatusRequest {

@@ -1,4 +1,3 @@
-// services/footballEvents.ts
 import api from "./api";
 import type {WatchedStatus} from "~/types/events";
 

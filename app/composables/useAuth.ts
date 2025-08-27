@@ -93,7 +93,7 @@ if (typeof window !== "undefined") {
 
 const isLoggedIn = computed(() => {
     if (!token.value || !expiresAt.value) return false;
-    return Date.now() < expiresAt.value; // still valid
+    return Date.now() < expiresAt.value;
 });
 
 export function useAuth() {

@@ -28,7 +28,7 @@
           v-for="ev in events"
           :key="ev.details.id"
           :event="ev.details"
-          :watch-status="ev.watchStatus"
+          :watch-status="ev.status"
           @update:watchStatus="(val) => updateWatchStatus(ev.details.id, val)"
       />
     </div>
