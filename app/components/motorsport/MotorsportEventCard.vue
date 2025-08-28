@@ -20,7 +20,6 @@
       <ul class="space-y-1 text-sm">
         <li><b>Date:</b> {{ formattedDate }}</li>
         <li><b>Status:</b> {{ event.status }}</li>
-        <li><b>Winner:</b> {{ event.winner ?? "-" }}</li>
       </ul>
     </template>
 

@@ -22,6 +22,9 @@
     <div v-if="loading" class="text-center py-10 text-gray-500">
       <ProgressSpinner />
     </div>
+    <div v-else-if="fetchError" class="text-center py-10 text-gray-500">
+      <Message severity="error">Unable to load events. Please try again later.</Message>
+    </div>
     <div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 justify-items-center">
       <FootballEventCard
           v-for="ev in events"
@@ -47,14 +50,13 @@
       </Button>
     </div>
   </div>
-  <Toast />
+  <Toast ref="toast" class="max-w-xs sm:max-w-sm" position="top-center" />
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, watch } from "vue";
 import FootballEventCard from "~/components/football/FootballEventCard.vue";
 import {fetchFootballEventsWithStatus, updateFootballEventWatchStatus} from "~/services/footballEvents";
-import { useAuth } from "~/composables/useAuth";
 import type { FootballEventWrapper } from "~/types/football/events";
 import type { WatchedStatus } from "~/types/events";
 import {COMPETITIONS} from "~/constants/football/competitions";
@@ -67,9 +69,8 @@ const page = ref(0);
 const pageSize = 12;
 const toast = useToast();
 const loading = ref(false);
-const lastPage = ref(false);
-
-const { isLoggedIn } = useAuth();
+const lastPage = ref(true);
+const fetchError = ref(false);
 
 async function loadFootballEvents() {
   loading.value = true;
@@ -85,13 +86,10 @@ async function loadFootballEvents() {
 
     events.value = res.events ?? [];
     lastPage.value = res.last ?? false;
+    fetchError.value = false;
   } catch (err) {
-    toast.add({
-      severity: "error",
-      summary: "Error",
-      detail: "Unable to load events. Please try again later",
-      life: 3000,
-    });
+    events.value = [];
+    fetchError.value = true;
   } finally {
     loading.value = false;
   }
@@ -103,7 +101,7 @@ watch([competitionFilter, eventStatusFilter], () => {
 });
 
 onMounted(loadFootballEvents);
-watch([competitionFilter, eventStatusFilter, page, isLoggedIn], loadFootballEvents);
+watch([competitionFilter, eventStatusFilter, page], loadFootballEvents);
 
 function updateWatchStatus(eventId: number, newStatus: WatchedStatus) {
   const wrapper = events.value.find((w) => w.details.id === eventId);
@@ -137,5 +135,4 @@ function prevPage() {
 function nextPage() {
   if (!lastPage.value) page.value++;
 }
-
 </script>

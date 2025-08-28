@@ -80,3 +80,9 @@
     </section>
   </div>
 </template>
+
+<script setup>
+definePageMeta({
+  public: true
+})
+</script>

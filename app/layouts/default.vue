@@ -13,17 +13,17 @@
 
 
     <!-- Token expired dialog -->
-    <Dialog
-        header="Session Expired"
-        v-model:visible="showTokenExpiredDialog"
-        modal
-        :closable="false"
-    >
-      <p>Your session has expired. Please log in again.</p>
-      <template #footer>
-        <Button label="Login" @click="redirectToLogin" />
-      </template>
-    </Dialog>
+<!--    <Dialog-->
+<!--        header="Session Expired"-->
+<!--        v-model:visible="showTokenExpiredDialog"-->
+<!--        modal-->
+<!--        :closable="false"-->
+<!--    >-->
+<!--      <p>Your session has expired. Please log in again.</p>-->
+<!--      <template #footer>-->
+<!--        <Button label="Login" @click="redirectToLogin" />-->
+<!--      </template>-->
+<!--    </Dialog>-->
 
     <Footer />
   </div>
@@ -32,9 +32,14 @@
 <script setup lang="ts">
 import Navbar from "~/components/Navbar.vue";
 import Footer from "~/components/Footer.vue";
-import { useTokenExpiry } from "~/composables/useTokenExpiry";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
-const { showTokenExpiredDialog, redirectToLogin } = useTokenExpiry();
+
+import {useUserStore} from "~/stores/useUserStore";
+
+onMounted(async () => {
+  const userStore = useUserStore()
+  await userStore.checkAuth();
+});
 </script>

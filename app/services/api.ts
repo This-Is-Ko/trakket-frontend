@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getAuthToken } from "~/composables/useAuth";
+import {useUserStore} from "~/stores/useUserStore";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -8,22 +8,13 @@ const api = axios.create({
     headers: {
         "Content-Type": "application/json",
     },
+    withCredentials: true,
 });
 
-// Add interceptor to inject auth token
-api.interceptors.request.use((config) => {
-    const token = getAuthToken();
-    if (token) {
-        config.headers = config.headers || {};
-        config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-});
 
 api.interceptors.response.use(
     response => response,
-    error => {
-        const { logout } = useAuth();
+    async error => {
 
         if (error.response) {
             const status = error.response.status;
@@ -33,7 +24,8 @@ api.interceptors.response.use(
             if (message) {
                 alert(message);
             } else if (status === 401) {
-                logout();
+                const userStore = useUserStore()
+                await userStore.logout();
                 alert('Your session has expired. Please log in again.');
                 window.location.href = '/login';
             } else if (status === 403) {

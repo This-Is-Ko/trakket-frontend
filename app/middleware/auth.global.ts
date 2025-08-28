@@ -1,14 +1,17 @@
-import { useAuth } from '~/composables/useAuth'
 import { defineNuxtRouteMiddleware, navigateTo } from '#app'
+import {useUserStore} from "~/stores/useUserStore";
 
-export default defineNuxtRouteMiddleware((to) => {
-    const auth = useAuth()
-
-    // Pages allowed without login
-    const publicPages = ['/', '/signup', '/login', '/about']
-
-    if (!auth.isLoggedIn.value && !publicPages.includes(to.path)) {
-        // Redirect unauthenticated users to login page
-        return navigateTo('/login')
+export default defineNuxtRouteMiddleware(async (to) => {
+    const userStore = useUserStore()
+    if (process.client) {
+        await userStore.checkAuth()
+        // Public pages are defined in metadata
+        if (!userStore.isLoggedIn && !to.meta.public) {
+            // Redirect unauthenticated users to login page
+            return navigateTo({
+                path: '/login',
+                query: { redirectMessage: 'Login to access this page' }
+            });
+        }
     }
 })

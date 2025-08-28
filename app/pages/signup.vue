@@ -1,6 +1,7 @@
 <template>
-  <Toast ref="toast" />
-  <div class="flex flex-col justify-center items-center min-h-screen bg-gray-100 px-4">
+  <Toast ref="toast" class="max-w-xs sm:max-w-sm" position="top-center" />
+  <div class="flex flex-col justify-center items-center bg-gray-100 px-4"
+       :style="{ minHeight: 'calc(100vh - 64px)' }">
     <h2 class="text-3xl font-bold mb-6 text-center">Sign up</h2>
 
     <!-- Signup form -->
@@ -77,6 +78,7 @@
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useAuth } from "~/composables/useAuth";
+import {useUserStore} from "~/stores/useUserStore";
 
 const toast = useToast();
 const username = ref("");
@@ -93,11 +95,13 @@ const countdown = ref(0);
 let countdownTimer: NodeJS.Timeout | null = null;
 
 const router = useRouter();
-const { signup, verifyOtp, resendOtp, isLoggedIn } = useAuth();
+const { signup, verifyOtp, resendOtp } = useAuth();
 
-onMounted(() => {
-  if (isLoggedIn.value) {
-    router.push("/");
+onMounted(async () => {
+  const userStore = useUserStore()
+  await userStore.checkAuth();
+  if (userStore.isLoggedIn) {
+    await router.push("/");
   }
 });
 
@@ -200,4 +204,8 @@ function startCountdown() {
     }
   }, 1000);
 }
+
+definePageMeta({
+  public: true
+})
 </script>

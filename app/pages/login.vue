@@ -1,6 +1,7 @@
 <template>
-  <Toast ref="toast" />
-  <div class="flex flex-col justify-center items-center min-h-screen bg-gray-100 px-4">
+  <Toast ref="toast" class="max-w-xs sm:max-w-sm" position="top-center" />
+  <div class="flex flex-col justify-center items-center bg-gray-100 px-4"
+       :style="{ minHeight: 'calc(100vh - 64px)' }">
     <h2 class="text-3xl font-bold mb-6 text-center">Login</h2>
 
     <form @submit.prevent="onLogin" class="w-full max-w-sm flex flex-col gap-4">
@@ -36,8 +37,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { useAuth } from "~/composables/useAuth";
+import {useUserStore} from "~/stores/useUserStore";
 
+const route = useRoute();
 const toast = useToast();
 const email = ref("");
 const password = ref("");
@@ -45,12 +47,21 @@ const loading = ref(false);
 const showErrors = ref(false);
 
 const router = useRouter();
-const { login, isLoggedIn } = useAuth();
 
+onMounted(async () => {
+  const userStore = useUserStore()
+  await userStore.checkAuth();
+  if (userStore.isLoggedIn) {
+    await router.push("/");
+  }
 
-onMounted(() => {
-  if (isLoggedIn.value) {
-    router.push("/");
+  if (route.query.redirectMessage) {
+    toast.add({
+      severity: "warn",
+      summary: "Authentication Required",
+      detail: "Login to access this page",
+      life: 6000
+    });
   }
 });
 
@@ -68,13 +79,18 @@ async function onLogin() {
 
   loading.value = true;
   try {
-    await login(email.value, password.value);
+    const userStore = useUserStore()
+    await userStore.login(email.value, password.value);
     // On success, navigate to home page
-    router.push("/");
+    await router.push("/");
   } catch (err) {
     showError("Login failed. Please check your credentials.");
   } finally {
     loading.value = false;
   }
 }
+
+definePageMeta({
+  public: true
+})
 </script>

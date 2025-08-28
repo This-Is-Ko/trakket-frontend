@@ -1,1 +1,4 @@
-export const EVENT_STATUSES = ['COMPLETED', 'SCHEDULED'];
+export const EVENT_STATUSES = [
+    'COMPLETED',
+    'SCHEDULED'
+];

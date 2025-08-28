@@ -1,7 +1,7 @@
 import api from "./api";
 
-export async function fetchFootballEventsWithStatus() {
-    const res = await api.get("/api/football/statistics");
+export async function fetchStatistics() {
+    const res = await api.get("/api/statistics");
     const data = res.data ?? {};
 
     const watchStatusDistribution = Object.entries(data.watchStatusDistribution ?? {}).reduce(

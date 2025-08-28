@@ -14,7 +14,7 @@
             <Button
                 label="Get Started"
                 as="router-link"
-                :to="auth.isLoggedIn.value ? '/football' : '/signup'"
+                :to="userStore.isLoggedIn ? '/football' : '/signup'"
                 rounded
                 class="!px-6 !py-3 !text-lg"
             />
@@ -58,7 +58,10 @@
 </template>
 
 <script setup lang="ts">
-  import { useAuth } from "~/composables/useAuth";
+import {useUserStore} from "~/stores/useUserStore";
+const userStore = useUserStore()
 
-  const auth = useAuth();
+definePageMeta({
+  public: true
+})
 </script>
