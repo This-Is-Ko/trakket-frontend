@@ -4,7 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
     app: {
         head: {
-            title: "Sports Tracker",
+            title: "Trakket",
         },
         // link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
     },
