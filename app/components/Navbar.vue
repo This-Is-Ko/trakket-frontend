@@ -50,7 +50,6 @@ const toggleMenu = (event) => {
   menu.value.toggle(event);
 };
 
-// Menu items with Statistics dropdown
 const menuItems = [
   { label: "Home", to: "/" },
   { label: "Football", to: "/football" },
@@ -67,7 +66,6 @@ const menuItems = [
 
 const toast = useToast();
 
-// User menu
 const userMenu = [
   {
     label: "Logout",

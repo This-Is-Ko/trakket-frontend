@@ -42,4 +42,8 @@ onMounted(async () => {
   const userStore = useUserStore()
   await userStore.checkAuth();
 });
+
+useHead({
+  meta: [{ property: 'og:title', content: `${route.meta.title} | Trakket` }]
+})
 </script>

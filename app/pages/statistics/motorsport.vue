@@ -156,4 +156,8 @@ async function loadStats() {
 }
 
 onMounted(loadStats);
+
+definePageMeta({
+  title: 'Motorsport Statistics'
+})
 </script>

@@ -91,6 +91,7 @@ async function onLogin() {
 }
 
 definePageMeta({
-  public: true
+  public: true,
+  title: 'Login'
 })
 </script>

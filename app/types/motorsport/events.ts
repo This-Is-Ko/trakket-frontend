@@ -13,6 +13,7 @@ export interface MotorsportEventDetails {
     raceName: string;
     circuitName: string;
     winner?: number | null;
+    flagUrl?: string | null;
 }
 
 export interface MotorsportEventWrapper {

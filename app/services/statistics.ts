@@ -22,6 +22,13 @@ export interface RecentEventFootball {
     status: string;
 }
 
+export interface FootballTeamStatistics {
+    teamId: number;
+    teamName: string;
+    watchedCount: number;
+    watchedPercent: number;
+}
+
 // Motorsport
 export interface MotorsportMatchDetails {
     id: number;
@@ -52,6 +59,7 @@ export interface FootballStatistics {
     watchStatusDistribution: Record<string, number>;
     perCompetition: Record<string, number>;
     recentEvents: RecentEventFootball[];
+    topTeams: FootballTeamStatistics[];
 }
 
 export interface MotorsportStatistics {

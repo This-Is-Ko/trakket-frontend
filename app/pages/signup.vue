@@ -206,6 +206,7 @@ function startCountdown() {
 }
 
 definePageMeta({
-  public: true
+  public: true,
+  title: 'Signup'
 })
 </script>

@@ -62,6 +62,7 @@ import {useUserStore} from "~/stores/useUserStore";
 const userStore = useUserStore()
 
 definePageMeta({
-  public: true
+  public: true,
+  title: 'Home'
 })
 </script>

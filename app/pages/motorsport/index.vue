@@ -1,15 +1,15 @@
 <template>
   <div class="p-4">
-    <h1 class="text-4xl font-bold text-center mb-6">Football</h1>
+    <h1 class="text-4xl font-bold text-center mb-6">Motorsport</h1>
     <p class="text-center text-gray-500 mb-6">
-      Track your watched matches for {{ competitionFilter }}
+      Track your watched races for {{ competitionFilter }}
     </p>
 
     <div class="grid grid-cols-1 lg:grid-cols-8 gap-6">
-      <!-- Sidebar: Leagues / Competitions -->
+      <!-- Sidebar: Championships / Competitions -->
       <div class="lg:col-span-2">
         <Card>
-          <template #title>Leagues</template>
+          <template #title>Championships</template>
           <template #content>
             <ul class="space-y-2">
               <li
@@ -80,6 +80,8 @@
             <Select
                 v-model="eventStatusFilter"
                 :options="EVENT_STATUSES"
+                optionLabel="label"
+                optionValue="value"
                 placeholder="Select Status"
                 class="w-full"
             />
@@ -92,27 +94,30 @@
   </div>
 </template>
 
-
 <script setup lang="ts">
 import { ref, onMounted, watch } from "vue";
-import EventAccordion from "~/components/football/EventAccordion.vue";
-import { fetchFootballEventsWithStatus, updateFootballEventWatchStatus } from "~/services/footballEvents";
-import type { FootballEventWrapper } from "~/types/football/events";
+import EventAccordion from "~/components/motorsport/EventAccordion.vue";
+import { fetchMotorsportEventsWithStatus, updateMotorsportEventWatchStatus } from "~/services/motorsportEvents";
 import type { WatchedStatus } from "~/types/events";
-import { COMPETITIONS } from "~/constants/football/competitions";
-import { EVENT_STATUSES } from "~/constants/eventStates";
+import type { MotorsportEventWrapper } from "~/types/motorsport/events";
+import { COMPETITIONS } from "~/constants/motorsport/competitions";
 
-const events = ref<FootballEventWrapper[]>([]);
-const competitionFilter = ref("English Premier League"); // default
+const EVENT_STATUSES = [
+  { label: "Completed", value: "COMPLETED" },
+  { label: "Scheduled", value: "SCHEDULED" }
+];
+
+const events = ref<MotorsportEventWrapper[]>([]);
+const competitionFilter = ref("Formula One");
 const eventStatusFilter = ref<"SCHEDULED" | "COMPLETED">("COMPLETED");
 const page = ref(0);
-const pageSize = 12;
+const pageSize = 10;
 const toast = useToast();
 const loading = ref(false);
 const lastPage = ref(true);
 const fetchError = ref(false);
 
-async function loadFootballEvents() {
+async function loadMotorsportEvents() {
   loading.value = true;
   fetchError.value = false;
   try {
@@ -123,13 +128,12 @@ async function loadFootballEvents() {
       pageSize: pageSize,
       ascending: false
     };
-    const res = await fetchFootballEventsWithStatus(params);
+    const res = await fetchMotorsportEventsWithStatus(params);
 
     events.value = res.events ?? [];
     lastPage.value = res.last ?? false;
     fetchError.value = false;
   } catch (err) {
-    // clear results and show placeholder
     events.value = [];
     fetchError.value = true;
   } finally {
@@ -137,19 +141,18 @@ async function loadFootballEvents() {
   }
 }
 
-// Reset page when filters change
 watch([competitionFilter, eventStatusFilter], () => {
   page.value = 0;
 });
 
-onMounted(loadFootballEvents);
-watch([competitionFilter, eventStatusFilter, page], loadFootballEvents);
+onMounted(loadMotorsportEvents);
+watch([competitionFilter, eventStatusFilter, page], loadMotorsportEvents);
 
 function updateWatchStatus(eventId: number, newStatus: WatchedStatus) {
   const wrapper = events.value.find((w) => w.details.id === eventId);
   if (wrapper) wrapper.status = newStatus;
 
-  updateFootballEventWatchStatus(eventId, newStatus)
+  updateMotorsportEventWatchStatus(eventId, newStatus)
       .then(() => {
         toast.add({
           severity: "success",
@@ -176,6 +179,6 @@ function nextPage() {
 }
 
 definePageMeta({
-  title: "Football"
+  title: "Motorsport"
 });
 </script>

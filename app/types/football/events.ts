@@ -1,3 +1,5 @@
+import type {WatchedStatus} from "~/types/events";
+
 export interface FootballEventDetails {
     id: number;
     dateTime: string;
@@ -8,9 +10,13 @@ export interface FootballEventDetails {
     externalLink?: string | null;
     title: string;
     subtitle?: string | null;
-    homeTeam: string;
-    awayTeam: string;
+    homeTeamId: string;
+    homeTeamName: string;
+    homeTeamLogoUrl?: string | null;
     homeScore?: number | null;
+    awayTeamId: string;
+    awayTeamName: string;
+    awayTeamLogoUrl?: string | null;
     awayScore?: number | null;
 }
 

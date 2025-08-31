@@ -83,6 +83,7 @@
 
 <script setup>
 definePageMeta({
-  public: true
+  public: true,
+  title: 'About'
 })
 </script>

@@ -2,7 +2,7 @@ import api from "./api";
 
 export interface UpdateStatusRequest {
     eventId: number;
-    status: string; // WatchedStatus
+    status: string;
 }
 
 export async function updateFootballEventStatus(payload: UpdateStatusRequest) {
