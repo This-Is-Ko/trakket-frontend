@@ -20,7 +20,7 @@
       <!-- Watch Status Table -->
       <div class="flex justify-center">
         <div class="bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200 dark:border-surface-700 flex flex-col gap-4 w-full max-w-md">
-          <h2 class="text-xl font-semibold mb-4 text-center">Watch Status Table</h2>
+          <h2 class="text-xl font-semibold mb-4 text-center">Watch Status</h2>
           <table class="min-w-full text-sm border-collapse">
             <thead>
             <tr class="border-b border-surface-200 dark:border-surface-700">

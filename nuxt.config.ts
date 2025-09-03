@@ -17,8 +17,25 @@ export default defineNuxtConfig({
         description: 'Track your sports viewing. All in one place.',
         defaultLocale: 'en',
     },
+    ssr: true,
+    nitro: {
+    },
+    routeRules: {
+        // Public
+        '/': { prerender: true },
+        '/about': { prerender: true },
+
+        // Auth related
+        '/login': { ssr: true },
+        '/signup': { ssr: true },
+
+        // Private
+        '/football/**': { ssr: false },
+        '/motorsport/**': { ssr: false },
+        '/statistics/**': { ssr: false },
+    },
     compatibilityDate: '2025-07-15',
-    devtools: { enabled: true },
+    devtools: { enabled: false },
     css: [
         "@/assets/main.css"
     ],

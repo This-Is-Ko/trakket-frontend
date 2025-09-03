@@ -99,7 +99,7 @@ const { signup, verifyOtp, resendOtp } = useAuth();
 
 onMounted(async () => {
   const userStore = useUserStore()
-  await userStore.checkAuth();
+  // await userStore.checkAuth();
   if (userStore.isLoggedIn) {
     await router.push("/");
   }

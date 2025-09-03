@@ -5,6 +5,7 @@ export const useUserStore = defineStore('user', {
     state: () => ({
         username: null as string | null,
         isLoggedIn: false,
+        showLoginDialog: false
     }),
     actions: {
         async login(email: string, password: string) {
@@ -41,8 +42,7 @@ export const useUserStore = defineStore('user', {
         async logout() {
             this.username = null;
             this.isLoggedIn = false;
-            await api.post("/api/auth/logout", {}).catch(() => {
-            });
+            await api.post("/api/auth/logout", {}).catch(() => {});
         },
     },
     persist: {

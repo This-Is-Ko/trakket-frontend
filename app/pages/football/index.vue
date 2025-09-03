@@ -101,6 +101,8 @@ import type { FootballEventWrapper } from "~/types/football/events";
 import type { WatchedStatus } from "~/types/events";
 import { COMPETITIONS } from "~/constants/football/competitions";
 import { EVENT_STATUSES } from "~/constants/eventStates";
+import {useUserStore} from "~/stores/useUserStore";
+import axios from "axios";
 
 const events = ref<FootballEventWrapper[]>([]);
 const competitionFilter = ref("English Premier League"); // default
@@ -111,6 +113,7 @@ const toast = useToast();
 const loading = ref(false);
 const lastPage = ref(true);
 const fetchError = ref(false);
+const userStore = useUserStore()
 
 async function loadFootballEvents() {
   loading.value = true;
@@ -132,6 +135,12 @@ async function loadFootballEvents() {
     // clear results and show placeholder
     events.value = [];
     fetchError.value = true;
+    if (axios.isAxiosError(err)) {
+      const status = err.response?.status;
+      if (status === 401) {
+        userStore.showLoginDialog = true;
+      }
+    }
   } finally {
     loading.value = false;
   }

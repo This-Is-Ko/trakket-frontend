@@ -18,6 +18,32 @@
         </div>
       </div>
 
+      <div class="flex justify-center">
+        <div
+            class="bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200 dark:border-surface-700 flex flex-col gap-4 w-full max-w-md"
+        >
+          <h2 class="text-xl font-semibold mb-4 text-center">Watch Status</h2>
+          <table class="min-w-full text-sm border-collapse">
+            <thead>
+            <tr class="border-b border-surface-200 dark:border-surface-700">
+              <th class="py-2 px-4 text-left">Status</th>
+              <th class="py-2 px-4 text-right">Count</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr
+                v-for="(count, status) in watchStatusDistribution"
+                :key="status"
+                class="border-b border-surface-200 dark:border-surface-700"
+            >
+              <td class="py-2 px-4">{{ formatEnumToString(status) }}</td>
+              <td class="py-2 px-4 text-right">{{ count }}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       <!-- Matches Per Competition -->
       <div class="flex justify-center">
         <div class="bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200 dark:border-surface-700 flex flex-col gap-4 w-full max-w-md">
@@ -81,6 +107,7 @@ const watchStatusChart = ref({});
 const matchesPerCompetitionChart = ref({});
 const topTeamsChart = ref({});
 const recentMatches = ref<RecentEventFootball[]>([]);
+const watchStatusDistribution = ref<Record<string, number>>({});
 
 const chartOptions = { responsive: true, plugins: { legend: { position: "top" } } };
 
@@ -104,6 +131,8 @@ async function loadStats() {
       labels: Object.keys(data.watchStatusDistribution).map(formatEnumToString),
       datasets: [{ data: Object.values(data.watchStatusDistribution), backgroundColor: ["#f87171","#34d399","#60a5fa","#facc15","#a78bfa"] }]
     };
+
+    watchStatusDistribution.value = data.watchStatusDistribution;
 
     // Matches Per Competition
     matchesPerCompetitionChart.value = {

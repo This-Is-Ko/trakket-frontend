@@ -13,17 +13,17 @@
 
 
     <!-- Token expired dialog -->
-<!--    <Dialog-->
-<!--        header="Session Expired"-->
-<!--        v-model:visible="showTokenExpiredDialog"-->
-<!--        modal-->
-<!--        :closable="false"-->
-<!--    >-->
-<!--      <p>Your session has expired. Please log in again.</p>-->
-<!--      <template #footer>-->
-<!--        <Button label="Login" @click="redirectToLogin" />-->
-<!--      </template>-->
-<!--    </Dialog>-->
+    <Dialog
+        header="Session Expired"
+        v-model:visible="userStore.showLoginDialog"
+        modal
+        :closable="false"
+    >
+      <p>Your session has expired. Please log in again.</p>
+      <template #footer>
+        <Button label="Login" @click="redirectToLogin" />
+      </template>
+    </Dialog>
 
     <Footer />
   </div>
@@ -33,15 +33,18 @@
 import Navbar from "~/components/Navbar.vue";
 import Footer from "~/components/Footer.vue";
 import { useRoute } from "vue-router";
+import {useRouter} from "#vue-router";
 
+const router = useRouter();
 const route = useRoute();
 
 import {useUserStore} from "~/stores/useUserStore";
+const userStore = useUserStore()
 
-onMounted(async () => {
-  const userStore = useUserStore()
-  await userStore.checkAuth();
-});
+const redirectToLogin = async () => {
+  userStore.showLoginDialog = false;
+  await router.push("/login");
+};
 
 useHead({
   meta: [{ property: 'og:title', content: `${route.meta.title} | Trakket` }]

@@ -53,6 +53,7 @@ export interface RecentEventMotorsport {
 // Statistics Per Section
 export interface OverallStatistics {
     watchStatusDistribution: Record<string, number>;
+    sportsMix: Record<string, number>;
 }
 
 export interface FootballStatistics {
@@ -66,6 +67,7 @@ export interface MotorsportStatistics {
     watchStatusDistribution: Record<string, number>;
     watchedEventsPerCompetition: Record<string, number>;
     recentEvents: RecentEventMotorsport[];
+    motorsportSeasonCoverage: Record<string, number>;
 }
 
 // Combined

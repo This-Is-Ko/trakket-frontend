@@ -1,5 +1,6 @@
 import api from "./api";
 import type {WatchedStatus} from "~/types/events";
+import {useUserStore} from "~/stores/useUserStore";
 
 export interface FetchEventsParams {
     competition: string;
@@ -8,6 +9,7 @@ export interface FetchEventsParams {
     pageSize: number;
     ascending: boolean;
 }
+
 export async function fetchFootballEvents(params: FetchEventsParams) {
     const res = await api.get("/api/football/events", {
         params,
@@ -36,30 +38,8 @@ export async function fetchFootballEventsWithStatus(params: FetchEventsParams) {
     };
 }
 
-export async function fetchMotorsportEventsWithStatus(params: FetchEventsParams) {
-    const res = await api.get("/api/motorsport/events/with-status", {
-        params,
-    });
-    const data = res.data ?? {};
-    return {
-        events: data.events ?? [],
-        pageNumber: data.pageNumber ?? 0,
-        pageSize: data.pageSize ?? params.pageSize,
-        totalElements: data.totalElements ?? 0,
-        last: data.last ?? false,
-    };
-}
-
 export async function updateFootballEventWatchStatus(eventId: number, status: WatchedStatus) {
     const {data} = await api.post("/api/football/events/status", {
-        eventId,
-        status,
-    });
-    return data;
-}
-
-export async function updateMotorsportEventWatchStatus(eventId: number, status: WatchedStatus) {
-    const { data } = await api.post("/api/motorsport/events/status", {
         eventId,
         status,
     });

@@ -101,6 +101,7 @@ import { fetchMotorsportEventsWithStatus, updateMotorsportEventWatchStatus } fro
 import type { WatchedStatus } from "~/types/events";
 import type { MotorsportEventWrapper } from "~/types/motorsport/events";
 import { COMPETITIONS } from "~/constants/motorsport/competitions";
+import axios from "axios";
 
 const EVENT_STATUSES = [
   { label: "Completed", value: "COMPLETED" },
@@ -136,6 +137,12 @@ async function loadMotorsportEvents() {
   } catch (err) {
     events.value = [];
     fetchError.value = true;
+    if (axios.isAxiosError(err)) {
+      const status = err.response?.status;
+      if (status === 401) {
+        userStore.showLoginDialog = true;
+      }
+    }
   } finally {
     loading.value = false;
   }

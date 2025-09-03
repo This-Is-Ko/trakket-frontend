@@ -25,6 +25,33 @@
         </div>
       </div>
 
+      <!-- Watch Status Table -->
+      <div class="flex justify-center">
+        <div
+            class="bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200 dark:border-surface-700 flex flex-col gap-4 w-full max-w-md"
+        >
+          <h2 class="text-xl font-semibold mb-4 text-center">Motorsport Watch Status Table</h2>
+          <table class="min-w-full text-sm border-collapse">
+            <thead>
+            <tr class="border-b border-surface-200 dark:border-surface-700">
+              <th class="py-2 px-4 text-left">Status</th>
+              <th class="py-2 px-4 text-right">Count</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr
+                v-for="(count, status) in motorsportWatchStatusDistribution"
+                :key="status"
+                class="border-b border-surface-200 dark:border-surface-700"
+            >
+              <td class="py-2 px-4">{{ formatEnumToString(status) }}</td>
+              <td class="py-2 px-4 text-right">{{ count }}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       <!-- Events Per Competition Card -->
       <div class="flex justify-center">
         <div
@@ -40,7 +67,21 @@
         </div>
       </div>
 
-      <!-- Recent Events Table -->
+      <!-- Season Coverage Card -->
+      <div class="flex justify-center md:col-span-2">
+        <div
+            class="bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200 dark:border-surface-700 flex flex-col gap-4 w-full"
+        >
+          <h2 class="text-xl font-semibold mb-4 text-center">Season Coverage (%)</h2>
+          <Chart
+              type="bar"
+              :data="seasonCoverageChart"
+              :options="chartOptions"
+              class="w-full"
+          />
+        </div>
+      </div>
+
       <!-- Recent Events Table -->
       <div
           class="bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200 dark:border-surface-700 flex flex-col gap-4 w-full md:col-span-2"
@@ -48,10 +89,24 @@
         <h2 class="text-xl font-semibold mb-4">Recent Events</h2>
         <DataTable :value="recentEvents" class="w-full" :responsiveLayout="'scroll'">
 
-          <!-- Title Column -->
-          <Column header="Title">
+          <!-- Flag Column -->
+          <Column>
             <template #body="slotProps">
-              {{ slotProps.data.details.title }}
+              <img v-if="slotProps.data.details.flagUrl" :src="slotProps.data.details.flagUrl" alt="flag" class="h-6 w-auto" />
+            </template>
+          </Column>
+
+          <!-- Title Column -->
+          <Column header="Race">
+            <template #body="slotProps">
+              {{ slotProps.data.details.raceName ?? slotProps.data.details.title }}
+            </template>
+          </Column>
+
+          <!-- Circuit Column -->
+          <Column header="Circuit">
+            <template #body="slotProps">
+              {{ slotProps.data.details.circuitName ?? '-' }}
             </template>
           </Column>
 
@@ -77,16 +132,14 @@
           </Column>
 
           <!-- Watch Status Column -->
-          <Column header="Watch Status" sortField="details.status">
+          <Column header="Watch Status">
             <template #body="slotProps">
-              {{ formatEnumToString(slotProps.data.details.status) }}
+              {{ formatEnumToString(slotProps.data.status) }}
             </template>
           </Column>
 
         </DataTable>
       </div>
-
-
     </div>
   </div>
 </template>
@@ -101,7 +154,9 @@ const loading = ref(true);
 const fetchError = ref(false);
 const watchStatusChart = ref({});
 const eventsPerCompetitionChart = ref({});
+const seasonCoverageChart = ref({});
 const recentEvents = ref<RecentEventMotorsport[]>([]);
+const motorsportWatchStatusDistribution = ref<Record<string, number>>({});
 
 const chartOptions = { responsive: true, plugins: { legend: { position: "top" } } };
 
@@ -133,15 +188,28 @@ async function loadStats() {
         }
       ]
     };
+    motorsportWatchStatusDistribution.value = data.watchStatusDistribution;
 
     // Events Per Competition Bar Chart
     eventsPerCompetitionChart.value = {
-      labels: Object.keys(data.watchedEventsPerCompetition).map(formatEnumToString),
+      labels: Object.keys(data.watchedEventsPerCompetition),
       datasets: [
         {
           label: "Events",
           data: Object.values(data.watchedEventsPerCompetition),
           backgroundColor: "#3b82f6"
+        }
+      ]
+    };
+
+    // Season Coverage Chart
+    seasonCoverageChart.value = {
+      labels: Object.keys(data.motorsportSeasonCoverage),
+      datasets: [
+        {
+          label: "Coverage (%)",
+          data: Object.values(data.motorsportSeasonCoverage),
+          backgroundColor: "#10b981"
         }
       ]
     };
