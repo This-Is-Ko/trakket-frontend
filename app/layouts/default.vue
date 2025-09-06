@@ -3,10 +3,10 @@
     <Navbar />
 
     <main
-        :class="[
-          'w-full max-w-7xl mx-auto flex-1 flex flex-col gap-6',
-          route.path !== '/' && route.path !== '/about' ? 'p-6' : ''
-        ]"
+      :class="[
+        'w-full max-w-7xl mx-auto flex-1 flex flex-col gap-6',
+        route.path !== '/' && route.path !== '/about' ? 'px-1 sm:px-6 py-6' : ''
+      ]"
     >
       <slot />
     </main>

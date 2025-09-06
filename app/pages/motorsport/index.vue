@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4">
+  <div class="px-2 sm:px-4 py-4">
     <h1 class="text-4xl font-bold text-center mb-6">Motorsport</h1>
     <p class="text-center text-gray-500 mb-6">
       Track your watched races for {{ competitionFilter }}
@@ -7,7 +7,7 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-8 gap-6">
       <!-- Sidebar: Championships / Competitions -->
-      <div class="lg:col-span-2">
+      <div class="lg:col-span-2 order-1 lg:order-1">
         <Card>
           <template #title>Championships</template>
           <template #content>
@@ -29,8 +29,25 @@
         </Card>
       </div>
 
+      <!-- Right sidebar: Event Status Filter -->
+      <div class="lg:col-span-2 order-2 lg:order-3">
+        <Card>
+          <template #title>Event Status</template>
+          <template #content>
+            <Select
+                v-model="eventStatusFilter"
+                :options="EVENT_STATUSES"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="Select Status"
+                class="w-full"
+            />
+          </template>
+        </Card>
+      </div>
+
       <!-- Main content: Accordion -->
-      <div class="lg:col-span-4">
+    <div class="lg:col-span-4 order-3 lg:order-2">
         <!-- Loading / Error -->
         <div v-if="loading" class="text-center py-10 text-gray-500">
           <ProgressSpinner />
@@ -70,23 +87,6 @@
             Next
           </Button>
         </div>
-      </div>
-
-      <!-- Right sidebar: Event Status Filter -->
-      <div class="lg:col-span-2">
-        <Card>
-          <template #title>Event Status</template>
-          <template #content>
-            <Select
-                v-model="eventStatusFilter"
-                :options="EVENT_STATUSES"
-                optionLabel="label"
-                optionValue="value"
-                placeholder="Select Status"
-                class="w-full"
-            />
-          </template>
-        </Card>
       </div>
     </div>
 

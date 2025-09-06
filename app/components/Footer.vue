@@ -3,7 +3,7 @@
     <div class="max-w-7xl mx-auto px-6 lg:px-20 grid grid-cols-1 md:grid-cols-4 gap-10">
       <!-- Info -->
       <div>
-        <h3 class="text-lg font-bold text-white mb-3">Sports Watch Tracker</h3>
+        <h3 class="text-lg font-bold text-white mb-3">Trakket</h3>
         <p class="text-sm">Track the sports you’ve watched. Understand your viewing habits. All in one place.</p>
       </div>
 
@@ -36,7 +36,7 @@
     </div>
 
     <div class="mt-10 text-center text-sm text-gray-500">
-      © {{ new Date().getFullYear() }} Sports Watch Tracker. All rights reserved.
+      © {{ new Date().getFullYear() }} Trakket. All rights reserved.
     </div>
   </footer>
 </template>

@@ -1,28 +1,19 @@
 <template>
   <AccordionPanel :value="panelValue">
     <AccordionHeader>
-      <div class="relative w-full">
-        <div class="flex items-center w-full">
-          <div class="flex justify-end w-1/2 pr-2">
-            <span class="text-sm font-medium truncate max-w-[150px] text-right">
-              {{ event.subtitle ?? (`Round ${event.round ?? "-"}`) }}
-            </span>
-          </div>
-
-          <div v-if="!event.flagUrl" class="w-6 h-6 bg-gray-300 rounded-full flex-shrink-0"></div>
+      <div class="w-full flex items-center justify-between px-3">
+        <!-- Left: Flag + Race Name -->
+        <div class="flex items-center gap-2 min-w-0">
+          <div v-if="!event.flagUrl" class="w-6 h-4 bg-gray-300 flex-shrink-0"></div>
           <Image v-else :src="event.flagUrl" alt="Flag" width="22" />
-
-          <div class="flex justify-start w-1/2 pl-2">
-            <span class="text-sm font-medium truncate max-w-[200px] text-left">
-              {{ event.raceName ?? event.title }}
-            </span>
-          </div>
+          <span class="text-sm font-medium truncate max-w-[400px]">
+            {{ event.raceName ?? event.title }}
+          </span>
         </div>
 
-        <div class="absolute right-0 top-1/2 transform -translate-y-1/2 pr-3">
-          <div class="w-[96px] flex justify-end">
-            <Tag v-show="localWatchStatus !== 'UNWATCHED'" icon="pi pi-check"></Tag>
-          </div>
+        <!-- Right: Tag -->
+        <div class="flex-shrink-0 w-[96px] flex justify-end">
+          <Tag v-show="localWatchStatus !== 'UNWATCHED'" icon="pi pi-check" />
         </div>
       </div>
     </AccordionHeader>
@@ -30,14 +21,11 @@
     <AccordionContent>
       <div class="space-y-3 text-sm">
         <dl class="grid grid-cols-2 gap-x-4 gap-y-2">
-          <dt class="font-semibold">Grand Prix / Race:</dt>
-          <dd class="truncate">{{ event.raceName ?? event.title }}</dd>
-
-          <dt class="font-semibold">Subtitle / Round:</dt>
-          <dd class="truncate">{{ event.subtitle ?? (event.round ?? "-") }}</dd>
-
           <dt class="font-semibold">Competition:</dt>
           <dd>{{ event.competition ?? "-" }}</dd>
+
+          <dt class="font-semibold">Round:</dt>
+          <dd class="truncate">{{ event.round ?? "-" }}</dd>
 
           <dt class="font-semibold">Circuit:</dt>
           <dd>{{ event.circuitName ?? "-" }}</dd>
