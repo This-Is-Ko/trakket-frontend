@@ -8,14 +8,43 @@
       </div>
 
       <!-- Quick Links -->
-      <div>
-        <h4 class="text-md font-semibold text-white mb-2">Quick Links</h4>
-        <ul class="space-y-2">
-          <li><NuxtLink to="/about">About</NuxtLink></li>
-          <li><NuxtLink to="/signup">Sign Up</NuxtLink></li>
-          <li><NuxtLink to="/login">Login</NuxtLink></li>
+      <nav aria-label="Footer quick links">
+        <h4 class="text-md font-semibold text-white mb-3">Quick Links</h4>
+        <ul class="grid grid-cols-2 gap-x-6 gap-y-2 text-sm leading-6">
+          <li>
+            <NuxtLink
+                to="/signup"
+                class="block text-gray-300 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded"
+            >
+              Sign Up
+            </NuxtLink>
+          </li>
+          <li>
+            <NuxtLink
+                to="/login"
+                class="block text-gray-300 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded"
+            >
+              Login
+            </NuxtLink>
+          </li>
+          <li>
+            <NuxtLink
+                to="/about"
+                class="block text-gray-300 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded"
+            >
+              About
+            </NuxtLink>
+          </li>
+          <li>
+            <NuxtLink
+                to="/privacy-policy"
+                class="block text-gray-300 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded"
+            >
+              Privacy Policy
+            </NuxtLink>
+          </li>
         </ul>
-      </div>
+      </nav>
 
       <!-- Future Plans -->
       <div>
@@ -30,7 +59,7 @@
         <h4 class="text-md font-semibold text-white mb-2">Contact Us</h4>
         <p class="text-sm">
           Have questions, feedback or feature ideas? Feel free to reach out:
-          <a href="mailto:sportswatchtracker@gmail.com" class="text-indigo-400 underline">Email</a>
+          <a href="mailto:sportswatchtracker@gmail.com" class="text-indigo-400 underline">Contact</a>
         </p>
       </div>
     </div>

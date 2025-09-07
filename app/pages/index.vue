@@ -87,7 +87,7 @@
     </div>
 
     <!-- Features Section -->
-    <section class="max-w-7xl mx-auto px-6 lg:px-20 pt-12 pb-24">
+    <section class="max-w-7xl mx-auto px-6 lg:px-20 pt-12 pb-16">
       <h2 class="text-3xl font-bold text-center mb-12">Why Use Trakket?</h2>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
         <div
