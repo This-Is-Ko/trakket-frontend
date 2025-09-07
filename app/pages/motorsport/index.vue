@@ -96,12 +96,14 @@
 
 <script setup lang="ts">
 import { ref, onMounted, watch } from "vue";
+import { useToast } from 'primevue/usetoast';
 import EventAccordion from "~/components/motorsport/EventAccordion.vue";
 import { fetchMotorsportEventsWithStatus, updateMotorsportEventWatchStatus } from "~/services/motorsportEvents";
 import type { WatchedStatus } from "~/types/events";
 import type { MotorsportEventWrapper } from "~/types/motorsport/events";
 import { COMPETITIONS } from "~/constants/motorsport/competitions";
 import axios from "axios";
+import {useUserStore} from "~/stores/useUserStore";
 
 const EVENT_STATUSES = [
   { label: "Completed", value: "COMPLETED" },
@@ -117,6 +119,7 @@ const toast = useToast();
 const loading = ref(false);
 const lastPage = ref(true);
 const fetchError = ref(false);
+const userStore = useUserStore()
 
 async function loadMotorsportEvents() {
   loading.value = true;

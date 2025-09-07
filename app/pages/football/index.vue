@@ -95,6 +95,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, watch } from "vue";
+import { useToast } from 'primevue/usetoast';
 import EventAccordion from "~/components/football/EventAccordion.vue";
 import { fetchFootballEventsWithStatus, updateFootballEventWatchStatus } from "~/services/footballEvents";
 import type { FootballEventWrapper } from "~/types/football/events";

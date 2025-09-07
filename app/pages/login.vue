@@ -37,6 +37,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { useToast } from 'primevue/usetoast';
 import {useUserStore} from "~/stores/useUserStore";
 
 const route = useRoute();

@@ -78,6 +78,7 @@
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useAuth } from "~/composables/useAuth";
+import { useToast } from 'primevue/usetoast';
 import {useUserStore} from "~/stores/useUserStore";
 
 const toast = useToast();
