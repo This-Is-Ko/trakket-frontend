@@ -15,7 +15,7 @@ export default defineNuxtConfig({
         },
     },
     site: {
-        url: 'https://trakket.com',
+        url: 'https://www.trakket.com',
         name: 'Trakket',
         description: 'Track your sports viewing. All in one place.',
         defaultLocale: 'en',

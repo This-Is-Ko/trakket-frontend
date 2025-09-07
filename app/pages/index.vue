@@ -134,6 +134,7 @@ const leagues = ref([
   { league: "La Liga", sport: "Football" },
   { league: "Women's Super League", sport: "Football" },
   { league: "Serie A", sport: "Football" },
+  { league: "Bundesliga", sport: "Football" },
   { league: "Formula 1", sport: "Motorsport" }
 ]);
 
