@@ -22,6 +22,7 @@
           v-model="password"
           placeholder="Password"
           toggleMask
+          :feedback="false"
           class="w-full"
           :inputClass="['w-full', showErrors && (!password || !isStrongPassword(password)) ? '!border-red-500 focus:!ring-red-500 focus:!border-red-500' : '']"
       />
