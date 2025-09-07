@@ -35,28 +35,37 @@
           />
         </div>
 
-        <!-- Preview mockup placeholder -->
         <div class="mt-16 flex justify-center">
           <div class="w-full md:w-4/5 h-72 bg-gray-900 rounded-xl shadow-lg">
             <div class="flex items-center px-4 py-2 bg-gray-800 rounded-t-xl">
               <div class="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
               <div class="w-3 h-3 bg-yellow-500 rounded-full mr-2"></div>
               <div class="w-3 h-3 bg-green-500 rounded-full"></div>
-              <span class="ml-auto text-xs text-gray-400">trakket.com</span>
+              <span class="ml-auto text-xs text-gray-400">Trakket</span>
             </div>
-            <img
-                src="/landing-page-hero.png"
-                alt="Trakket Preview"
-                class="w-full h-auto"
-            />
+            <div>
+              <!-- Desktop Image -->
+              <img
+                  src="/landing-page-hero.png"
+                  alt="Trakket Preview"
+                  class="hidden md:block w-full h-auto"
+              />
+
+              <!-- Mobile Image -->
+              <img
+                  src="/landing-page-hero-mobile.png"
+                  alt="Trakket Mobile Preview"
+                  class="block md:hidden w-full h-auto"
+              />
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- Carousel Section -->
-    <div class="mt-12 max-w-5xl mx-auto px-6">
-      <h2 class="text-2xl md:text-3xl font-bold text-center mb-8">
+    <div class="mt-6 max-w-5xl mx-auto px-6">
+      <h2 class="text-3xl font-bold text-center mb-12">
         Supported Leagues & Sports
       </h2>
       <Carousel

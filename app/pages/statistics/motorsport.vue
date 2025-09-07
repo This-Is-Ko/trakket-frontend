@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 max-w-5xl mx-auto">
+  <div class="px-2 sm:px-4 py-4">
     <h1 class="text-3xl font-bold text-center mb-6">Motorsport Statistics</h1>
 
     <div v-if="loading" class="flex justify-center py-10">
@@ -8,136 +8,92 @@
     <div v-else-if="fetchError" class="text-center py-10 text-gray-500">
       <Message severity="error">Unable to load statistics. Please try again later.</Message>
     </div>
-    <div v-else class="grid md:grid-cols-2 gap-8">
+    <div v-else class="grid md:grid-cols-3 gap-8">
 
-      <!-- Watch Status Distribution Card -->
-      <div class="flex justify-center">
-        <div
-            class="bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200 dark:border-surface-700 flex flex-col gap-4 w-full max-w-md"
-        >
-          <h2 class="text-xl font-semibold mb-4 text-center">Watch Status Distribution</h2>
-          <Chart
-              type="pie"
-              :data="watchStatusChart"
-              :options="chartOptions"
-              class="w-full"
-          />
+      <!-- Watch Status Cards -->
+      <div class="md:col-span-3">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div
+              v-for="(count, status) in motorsportWatchStatusDistribution"
+              :key="status"
+              class="bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200
+               dark:border-surface-700 flex flex-col items-center justify-center shadow-sm"
+          >
+            <div class="text-3xl font-bold">{{ count }}</div>
+            <div class="text-sm text-gray-600 dark:text-gray-300">
+              {{ formatEnumToString(status) }}
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Watch Status Table -->
-      <div class="flex justify-center">
-        <div
-            class="bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200 dark:border-surface-700 flex flex-col gap-4 w-full max-w-md"
-        >
-          <h2 class="text-xl font-semibold mb-4 text-center">Motorsport Watch Status Table</h2>
-          <table class="min-w-full text-sm border-collapse">
-            <thead>
-            <tr class="border-b border-surface-200 dark:border-surface-700">
-              <th class="py-2 px-4 text-left">Status</th>
-              <th class="py-2 px-4 text-right">Count</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr
-                v-for="(count, status) in motorsportWatchStatusDistribution"
-                :key="status"
-                class="border-b border-surface-200 dark:border-surface-700"
-            >
-              <td class="py-2 px-4">{{ formatEnumToString(status) }}</td>
-              <td class="py-2 px-4 text-right">{{ count }}</td>
-            </tr>
-            </tbody>
-          </table>
+      <!-- Watch Status Distribution -->
+      <div class="bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200
+              dark:border-surface-700 flex flex-col gap-4 w-full h-[420px]">
+        <h2 class="text-xl font-semibold text-center">Watch Status Distribution</h2>
+        <div class="flex-1 min-h-0">
+          <Chart type="pie" :data="watchStatusChart" :options="chartOptions" class="w-full h-full"/>
         </div>
       </div>
 
-      <!-- Events Per Competition Card -->
-      <div class="flex justify-center">
-        <div
-            class="bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200 dark:border-surface-700 flex flex-col gap-4 w-full max-w-md"
-        >
-          <h2 class="text-xl font-semibold mb-4 text-center">Events per Competition</h2>
-          <Chart
-              type="bar"
-              :data="eventsPerCompetitionChart"
-              :options="chartOptions"
-              class="w-full"
-          />
+      <!-- Events Per Competition -->
+      <div class="bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200
+              dark:border-surface-700 flex flex-col gap-4 w-full h-[420px]">
+        <h2 class="text-xl font-semibold text-center">Events per Competition</h2>
+        <div class="flex-1 min-h-0">
+          <Chart type="bar" :data="eventsPerCompetitionChart" :options="chartOptions" class="w-full h-full"/>
         </div>
       </div>
 
-      <!-- Season Coverage Card -->
-      <div class="flex justify-center md:col-span-2">
-        <div
-            class="bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200 dark:border-surface-700 flex flex-col gap-4 w-full"
-        >
-          <h2 class="text-xl font-semibold mb-4 text-center">Season Coverage (%)</h2>
-          <Chart
-              type="bar"
-              :data="seasonCoverageChart"
-              :options="chartOptions"
-              class="w-full"
-          />
+      <!-- Season Coverage -->
+      <div class="bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200
+              dark:border-surface-700 flex flex-col gap-4 w-full h-[420px]">
+        <h2 class="text-xl font-semibold text-center">Season Coverage (%)</h2>
+        <div class="flex-1 min-h-0">
+          <Chart type="bar" :data="seasonCoverageChart" :options="chartOptions" class="w-full h-full"/>
         </div>
       </div>
 
       <!-- Recent Events Table -->
-      <div
-          class="bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200 dark:border-surface-700 flex flex-col gap-4 w-full md:col-span-2"
-      >
-        <h2 class="text-xl font-semibold mb-4">Recent Events</h2>
+      <div class="md:col-span-3 bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200
+              dark:border-surface-700 flex flex-col gap-4 w-full">
+        <h2 class="text-xl font-semibold text-center">Recent Events</h2>
         <DataTable :value="recentEvents" class="w-full" :responsiveLayout="'scroll'">
-
-          <!-- Flag Column -->
           <Column>
             <template #body="slotProps">
               <img v-if="slotProps.data.details.flagUrl" :src="slotProps.data.details.flagUrl" alt="flag" class="h-6 w-auto" />
             </template>
           </Column>
-
-          <!-- Title Column -->
           <Column header="Race">
             <template #body="slotProps">
               {{ slotProps.data.details.raceName ?? slotProps.data.details.title }}
             </template>
           </Column>
-
-          <!-- Circuit Column -->
           <Column header="Circuit">
             <template #body="slotProps">
               {{ slotProps.data.details.circuitName ?? '-' }}
             </template>
           </Column>
-
-          <!-- Competition Column -->
           <Column header="Competition">
             <template #body="slotProps">
               {{ slotProps.data.details.competition }}
             </template>
           </Column>
-
-          <!-- Date Column -->
           <Column header="Date">
             <template #body="slotProps">
               {{ formattedDate(slotProps.data.details.dateTime) }}
             </template>
           </Column>
-
-          <!-- Winner Column -->
           <Column header="Winner">
             <template #body="slotProps">
               {{ slotProps.data.details.winner ?? '-' }}
             </template>
           </Column>
-
-          <!-- Watch Status Column -->
           <Column header="Watch Status">
             <template #body="slotProps">
               {{ formatEnumToString(slotProps.data.status) }}
             </template>
           </Column>
-
         </DataTable>
       </div>
     </div>
@@ -158,7 +114,11 @@ const seasonCoverageChart = ref({});
 const recentEvents = ref<RecentEventMotorsport[]>([]);
 const motorsportWatchStatusDistribution = ref<Record<string, number>>({});
 
-const chartOptions = { responsive: true, plugins: { legend: { position: "top" } } };
+const chartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: { legend: { position: "top" } }
+};
 
 // Format ISO date strings to readable date/time
 function formattedDate(datetime: string) {

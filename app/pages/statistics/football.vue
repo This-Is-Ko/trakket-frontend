@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 max-w-5xl mx-auto">
+  <div class="px-2 sm:px-4 py-4">
     <h1 class="text-3xl font-bold text-center mb-6">Football Stats</h1>
 
     <div v-if="loading" class="flex justify-center py-10">
@@ -8,61 +8,56 @@
     <div v-else-if="fetchError" class="text-center py-10 text-gray-500">
       <Message severity="error">Unable to load statistics. Please try again later.</Message>
     </div>
-    <div v-else class="grid md:grid-cols-2 gap-8">
+    <div v-else class="grid md:grid-cols-3 gap-8">
 
-      <!-- Watch Status Distribution -->
-      <div class="flex justify-center">
-        <div class="bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200 dark:border-surface-700 flex flex-col gap-4 w-full max-w-md">
-          <h2 class="text-xl font-semibold mb-4 text-center">Watch Status Distribution</h2>
-          <Chart type="pie" :data="watchStatusChart" :options="chartOptions" class="w-full"/>
+      <!-- Watch Status Cards -->
+      <div class="md:col-span-3">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div
+              v-for="(count, status) in watchStatusDistribution"
+              :key="status"
+              class="bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200
+               dark:border-surface-700 flex flex-col items-center justify-center shadow-sm"
+          >
+            <div class="text-3xl font-bold">{{ count }}</div>
+            <div class="text-sm text-gray-600 dark:text-gray-300">
+              {{ formatEnumToString(status) }}
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="flex justify-center">
-        <div
-            class="bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200 dark:border-surface-700 flex flex-col gap-4 w-full max-w-md"
-        >
-          <h2 class="text-xl font-semibold mb-4 text-center">Watch Status</h2>
-          <table class="min-w-full text-sm border-collapse">
-            <thead>
-            <tr class="border-b border-surface-200 dark:border-surface-700">
-              <th class="py-2 px-4 text-left">Status</th>
-              <th class="py-2 px-4 text-right">Count</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr
-                v-for="(count, status) in watchStatusDistribution"
-                :key="status"
-                class="border-b border-surface-200 dark:border-surface-700"
-            >
-              <td class="py-2 px-4">{{ formatEnumToString(status) }}</td>
-              <td class="py-2 px-4 text-right">{{ count }}</td>
-            </tr>
-            </tbody>
-          </table>
+      <!-- Watch Status Distribution -->
+      <div class="bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200
+              dark:border-surface-700 flex flex-col gap-4 w-full h-[420px]">
+        <h2 class="text-xl font-semibold text-center">Watch Status Distribution</h2>
+        <div class="flex-1 min-h-0">
+          <Chart type="pie" :data="watchStatusChart" :options="chartOptions" class="w-full h-full"/>
         </div>
       </div>
 
       <!-- Matches Per Competition -->
-      <div class="flex justify-center">
-        <div class="bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200 dark:border-surface-700 flex flex-col gap-4 w-full max-w-md">
-          <h2 class="text-xl font-semibold mb-4 text-center">Matches per Competition</h2>
-          <Chart type="bar" :data="matchesPerCompetitionChart" :options="chartOptions" class="w-full"/>
+      <div class="bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200
+              dark:border-surface-700 flex flex-col gap-4 w-full h-[420px]">
+        <h2 class="text-xl font-semibold text-center">Matches per Competition</h2>
+        <div class="flex-1 min-h-0">
+          <Chart type="bar" :data="matchesPerCompetitionChart" :options="chartOptions" class="w-full h-full"/>
         </div>
       </div>
 
-      <!-- Top Teams -->
-      <div class="flex justify-center md:col-span-2">
-        <div class="bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200 dark:border-surface-700 flex flex-col gap-4 w-full max-w-2xl">
-          <h2 class="text-xl font-semibold mb-4 text-center">Top Teams Watched</h2>
-          <Chart type="bar" :data="topTeamsChart" :options="chartOptions" class="w-full"/>
+      <!-- Top Teams Watched -->
+      <div class="bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200
+              dark:border-surface-700 flex flex-col gap-4 w-full h-[420px]">
+        <h2 class="text-xl font-semibold text-center">Top Teams Watched</h2>
+        <div class="flex-1 min-h-0">
+          <Chart type="bar" :data="topTeamsChart" :options="chartOptions" class="w-full h-full"/>
         </div>
       </div>
 
       <!-- Recent Matches Table -->
-      <div class="bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200 dark:border-surface-700 flex flex-col gap-4 w-full md:col-span-2">
-        <h2 class="text-xl font-semibold mb-4">Recent Matches</h2>
+      <div class="md:col-span-3 bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200
+              dark:border-surface-700 flex flex-col gap-4 w-full">
+        <h2 class="text-xl font-semibold text-center">Recent Matches</h2>
         <DataTable :value="recentMatches" class="w-full" :responsiveLayout="'scroll'">
           <Column header="Title">
             <template #body="slotProps">
@@ -109,7 +104,11 @@ const topTeamsChart = ref({});
 const recentMatches = ref<RecentEventFootball[]>([]);
 const watchStatusDistribution = ref<Record<string, number>>({});
 
-const chartOptions = { responsive: true, plugins: { legend: { position: "top" } } };
+const chartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: { legend: { position: "top" } }
+};
 
 function formattedDate(datetime: string) {
   if (!datetime) return '-';

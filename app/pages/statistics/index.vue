@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-7xl mx-auto px-6 py-10">
+  <div class="px-2 sm:px-4 py-4">
     <h1 class="text-3xl font-bold text-center mb-6">Overall Statistics</h1>
 
     <div v-if="loading" class="flex justify-center py-10">
@@ -9,40 +9,46 @@
       <Message severity="error">Unable to load statistics. Please try again later.</Message>
     </div>
     <div v-else class="grid md:grid-cols-2 gap-8">
-      <!-- Watch Status Distribution -->
-      <div class="flex justify-center">
-        <div class="bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200 dark:border-surface-700 flex flex-col gap-4 w-full max-w-md">
-          <h2 class="text-xl font-semibold mb-4 text-center">Watch Status Distribution</h2>
-          <Chart type="pie" :data="watchStatusChart" :options="chartOptions" class="w-full"/>
+      <!-- Watch Status Cards -->
+      <div class="md:col-span-2">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div
+              v-for="(count, status) in overall?.watchStatusDistribution"
+              :key="status"
+              class="bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200
+             dark:border-surface-700 flex flex-col items-center justify-center shadow-sm"
+          >
+            <div class="text-3xl font-bold">{{ count }}</div>
+            <div class="text-sm text-gray-600 dark:text-gray-300">
+              {{ formatEnumToString(status) }}
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Watch Status Table -->
+      <!-- Watch Status Distribution -->
       <div class="flex justify-center">
-        <div class="bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200 dark:border-surface-700 flex flex-col gap-4 w-full max-w-md">
-          <h2 class="text-xl font-semibold mb-4 text-center">Watch Status</h2>
-          <table class="min-w-full text-sm border-collapse">
-            <thead>
-            <tr class="border-b border-surface-200 dark:border-surface-700">
-              <th class="py-2 px-4 text-left">Status</th>
-              <th class="py-2 px-4 text-right">Count</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="(count, status) in overall?.watchStatusDistribution" :key="status" class="border-b border-surface-200 dark:border-surface-700">
-              <td class="py-2 px-4">{{ formatEnumToString(status) }}</td>
-              <td class="py-2 px-4 text-right">{{ count }}</td>
-            </tr>
-            </tbody>
-          </table>
+        <div class="bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200
+              dark:border-surface-700 flex flex-col gap-4 w-full max-w-lg h-full">
+          <h2 class="text-xl font-semibold mb-4 text-center">Watch Status Distribution</h2>
+          <div class="flex-grow">
+            <Chart type="pie" :data="watchStatusChart" :options="chartOptions" class="w-full h-full"/>
+          </div>
         </div>
       </div>
 
       <!-- Sports Mix -->
-      <div class="flex justify-center md:col-span-2">
-        <div class="bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200 dark:border-surface-700 flex flex-col gap-4 w-full max-w-2xl">
+      <div class="flex justify-center">
+        <div class="bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200
+              dark:border-surface-700 flex flex-col gap-4 w-full max-w-lg h-full">
           <h2 class="text-xl font-semibold mb-4 text-center">Sports Mix</h2>
-          <Chart type="bar" :data="sportsMixChart" :options="chartOptions" class="w-full"/>
+          <Chart
+              type="bar"
+              :data="sportsMixChart"
+              :options="chartOptions"
+              :height="0"
+          style="flex-grow:1; width:100%;"
+          />
         </div>
       </div>
     </div>
