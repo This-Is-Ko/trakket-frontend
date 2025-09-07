@@ -2,9 +2,9 @@
   <div class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
     <!-- Hero Section -->
     <section class="bg-gradient-to-r from-indigo-500 via-blue-500 to-cyan-400 text-white py-20 px-6 lg:px-20 text-center mb-8">
-      <h1 class="text-5xl font-extrabold mb-4">About Sports Watch Tracker</h1>
+      <h1 class="text-5xl font-extrabold mb-4">About Trakket</h1>
       <p class="text-lg max-w-2xl mx-auto">
-        Sports Watch Tracker is your personal companion for logging and analyzing the sports events you watch.
+        Trakket is your personal companion for logging and analyzing the sports events you watch.
         Keep track of matches, discover your viewing habits, and gain insights about your favorite sports.
       </p>
     </section>
