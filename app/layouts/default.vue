@@ -13,17 +13,19 @@
 
 
     <!-- Token expired dialog -->
-    <Dialog
-        header="Session Expired"
-        v-model:visible="userStore.showLoginDialog"
-        modal
-        :closable="false"
-    >
-      <p>Your session has expired. Please log in again.</p>
-      <template #footer>
-        <Button label="Login" @click="redirectToLogin" />
-      </template>
-    </Dialog>
+    <ClientOnly>
+      <Dialog
+          header="Session Expired"
+          v-model:visible="userStore.showLoginDialog"
+          modal
+          :closable="false"
+      >
+        <p>Your session has expired. Please log in again.</p>
+        <template #footer>
+          <Button label="Login" @click="redirectToLogin" />
+        </template>
+      </Dialog>
+    </ClientOnly>
 
     <Footer />
   </div>

@@ -1,5 +1,7 @@
 <template>
-  <Toast ref="toast" class="max-w-xs sm:max-w-sm" position="top-center" />
+  <ClientOnly>
+    <Toast ref="toast" class="max-w-xs sm:max-w-sm" position="top-center" />
+  </ClientOnly>
   <div class="flex flex-col justify-center items-center bg-gray-100 px-4"
        :style="{ minHeight: 'calc(100vh - 64px)' }">
     <h2 class="text-3xl font-bold mb-6 text-center">Login</h2>
