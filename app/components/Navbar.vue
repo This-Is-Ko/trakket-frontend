@@ -1,5 +1,7 @@
 <template>
-  <Toast ref="toast" class="max-w-xs sm:max-w-sm" position="top-center" />
+  <ClientOnly>
+    <Toast class="max-w-xs sm:max-w-sm" position="top-center" />
+  </ClientOnly>
   <div class="w-full bg-white shadow">
     <div class="max-w-7xl mx-auto px-6">
       <Menubar :model="menuItems" class="w-full">

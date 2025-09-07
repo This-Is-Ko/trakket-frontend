@@ -90,7 +90,9 @@
       </div>
     </div>
 
-    <Toast ref="toast" class="max-w-xs sm:max-w-sm" position="top-center" />
+    <ClientOnly>
+      <Toast class="max-w-xs sm:max-w-sm" position="top-center" />
+    </ClientOnly>
   </div>
 </template>
 
