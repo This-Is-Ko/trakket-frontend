@@ -1,5 +1,5 @@
-import api from "./api";
 import type {WatchedStatus} from "~/types/events";
+import {createApi} from "~/services/api";
 
 export interface FetchEventsParams {
     competition: string;
@@ -10,6 +10,7 @@ export interface FetchEventsParams {
 }
 
 export async function fetchMotorsportEventsWithStatus(params: FetchEventsParams) {
+    const api = createApi();
     const res = await api.get("/api/motorsport/events/with-status", {
         params,
     });
@@ -24,6 +25,7 @@ export async function fetchMotorsportEventsWithStatus(params: FetchEventsParams)
 }
 
 export async function updateMotorsportEventWatchStatus(eventId: number, status: WatchedStatus) {
+    const api = createApi();
     const { data } = await api.post("/api/motorsport/events/status", {
         eventId,
         status,

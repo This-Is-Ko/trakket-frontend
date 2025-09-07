@@ -1,6 +1,7 @@
-import api from "./../services/api";
+import {createApi} from "~/services/api";
 
 async function signup(usernameParam: string, email: string, password: string) {
+    const api = createApi();
     try {
         await api.post("/api/auth/signup", {
             username: usernameParam,
@@ -14,6 +15,7 @@ async function signup(usernameParam: string, email: string, password: string) {
 }
 
 async function verifyOtp(email: string, otp: string) {
+    const api = createApi();
     try {
         await api.post("/api/auth/otp/verify", {
             email: email,
@@ -26,6 +28,7 @@ async function verifyOtp(email: string, otp: string) {
 }
 
 async function resendOtp(email: string) {
+    const api = createApi();
     try {
         await api.post("/api/auth/otp/resend", {
             email: email

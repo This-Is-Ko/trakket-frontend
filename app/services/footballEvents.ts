@@ -1,6 +1,5 @@
-import api from "./api";
 import type {WatchedStatus} from "~/types/events";
-import {useUserStore} from "~/stores/useUserStore";
+import {createApi} from "~/services/api";
 
 export interface FetchEventsParams {
     competition: string;
@@ -11,6 +10,7 @@ export interface FetchEventsParams {
 }
 
 export async function fetchFootballEvents(params: FetchEventsParams) {
+    const api = createApi();
     const res = await api.get("/api/football/events", {
         params,
     });
@@ -25,6 +25,7 @@ export async function fetchFootballEvents(params: FetchEventsParams) {
 }
 
 export async function fetchFootballEventsWithStatus(params: FetchEventsParams) {
+    const api = createApi();
     const res = await api.get("/api/football/events/with-status", {
         params,
     });
@@ -39,6 +40,7 @@ export async function fetchFootballEventsWithStatus(params: FetchEventsParams) {
 }
 
 export async function updateFootballEventWatchStatus(eventId: number, status: WatchedStatus) {
+    const api = createApi();
     const {data} = await api.post("/api/football/events/status", {
         eventId,
         status,

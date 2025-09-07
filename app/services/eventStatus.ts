@@ -1,4 +1,4 @@
-import api from "./api";
+import {createApi} from "~/services/api";
 
 export interface UpdateStatusRequest {
     eventId: number;
@@ -6,6 +6,7 @@ export interface UpdateStatusRequest {
 }
 
 export async function updateFootballEventStatus(payload: UpdateStatusRequest) {
+    const api = createApi();
     const res = await api.post("/api/football/events/status", payload);
     return res.data;
 }

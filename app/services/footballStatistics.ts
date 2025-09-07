@@ -1,4 +1,6 @@
-import api from "./api";
+import {createApi} from "~/services/api";
+
+const api = createApi();
 
 export async function fetchStatistics() {
     const res = await api.get("/api/statistics");

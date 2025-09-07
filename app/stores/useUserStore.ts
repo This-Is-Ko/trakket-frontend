@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import api from "./../services/api"
+import {createApi} from "~/services/api";
 
 export const useUserStore = defineStore('user', {
     state: () => ({
@@ -9,6 +9,7 @@ export const useUserStore = defineStore('user', {
     }),
     actions: {
         async login(email: string, password: string) {
+            const api = createApi();
             try {
                 const res = await api.post("/api/auth/login", {
                     email,
@@ -23,6 +24,7 @@ export const useUserStore = defineStore('user', {
             }
         },
         async checkAuth() {
+            const api = createApi();
             try {
                 const res = await api.get("/api/auth/me");
                 this.username = res.data.username ?? null;
@@ -40,6 +42,7 @@ export const useUserStore = defineStore('user', {
             }
         },
         async logout() {
+            const api = createApi();
             this.username = null;
             this.isLoggedIn = false;
             await api.post("/api/auth/logout", {}).catch(() => {});

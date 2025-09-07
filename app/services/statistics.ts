@@ -1,4 +1,4 @@
-import api from "./api";
+import {createApi} from "~/services/api";
 
 // Football
 export interface FootballMatchDetails {
@@ -79,6 +79,7 @@ export interface AllStatistics {
 
 // Fetcher
 export async function fetchStatistics(): Promise<AllStatistics> {
+    const api = createApi();
     const res = await api.get("/api/statistics");
     return res.data as AllStatistics;
 }
