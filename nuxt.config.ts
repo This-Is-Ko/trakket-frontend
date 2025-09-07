@@ -29,8 +29,8 @@ export default defineNuxtConfig({
         '/about': { prerender: true },
 
         // Auth related
-        '/login': { ssr: true },
-        '/signup': { ssr: true },
+        '/login': { ssr: false },
+        '/signup': { ssr: false },
 
         // Private
         '/football/**': { ssr: false },
