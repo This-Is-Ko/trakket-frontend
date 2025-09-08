@@ -1,7 +1,4 @@
 <template>
-  <ClientOnly>
-    <Toast class="max-w-xs sm:max-w-sm" position="top-center" />
-  </ClientOnly>
   <div class="flex flex-col justify-center items-center bg-gray-100 px-4"
        :style="{ minHeight: 'calc(100vh - 64px)' }">
     <h2 class="text-3xl font-bold mb-6 text-center">Login</h2>
@@ -84,7 +81,13 @@ async function onLogin() {
   try {
     const userStore = useUserStore()
     await userStore.login(email.value, password.value);
-    // On success, navigate to home page
+    // Show success toast and navigate to home page
+    toast.add({
+      severity: "success",
+      summary: "Success",
+      detail: "You have logged in successfully.",
+      life: 4000
+    });
     await router.push("/");
   } catch (err) {
     showError("Login failed. Please check your credentials.");

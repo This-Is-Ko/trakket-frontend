@@ -14,6 +14,7 @@
 
     <!-- Token expired dialog -->
     <ClientOnly>
+      <Toast class="max-w-xs sm:max-w-sm" position="top-center" />
       <Dialog
           header="Session Expired"
           v-model:visible="userStore.showLoginDialog"
