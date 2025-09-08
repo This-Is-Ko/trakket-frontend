@@ -7,67 +7,41 @@
           About <span class="font-extrabold" style="color: var(--p-button-primary-background)">Trakket</span>
         </h1>
         <p class="mt-6 text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-          Your personal companion for logging and analyzing the sports you watch.
-          Track matches, explore viewing habits, and gain insights over time.
+          Trakket helps you log every match you’ve watched — football matches, motorsport races, or highlights — and gives you insights into your sports viewing habits.
         </p>
       </div>
     </section>
 
-    <!-- Goal Section -->
+    <!-- Why Trakket Exists -->
     <section class="max-w-7xl mx-auto px-6 lg:px-20 py-6">
-      <h2 class="text-3xl font-bold text-center mb-8">Our Goal</h2>
+      <h2 class="text-3xl font-bold text-center mb-8">Why I Built Trakket</h2>
       <p class="text-center text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-        Trakket started as a personal log to track matches throughout the year.
-        It has now grown into a platform for anyone who wants to monitor and
-        analyze their sports-watching journey.
+        I created Trakket because I wanted to remember which matches I had watched — something I couldn’t track with regular sports apps. It began with logging football matches and motorsport races, and then grew into something more: a personal sports viewing tracker to reflect on your watch history and habits.
       </p>
     </section>
 
-    <!-- Key Features -->
+    <!-- Supported Sports -->
     <section class="max-w-7xl mx-auto px-6 lg:px-20 py-6">
-      <h2 class="text-3xl font-bold text-center mb-8">Key Features</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow hover:shadow-lg transition">
-          <i class="pi pi-calendar text-4xl text-indigo-500 mb-4"></i>
-          <h3 class="text-xl font-semibold mb-2">Event Logging</h3>
-          <p class="text-gray-600 dark:text-gray-300">
-            Record every match you watch, whether live, replay, or highlights.
-          </p>
-        </div>
-        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow hover:shadow-lg transition">
-          <i class="pi pi-chart-line text-4xl text-green-500 mb-4"></i>
-          <h3 class="text-xl font-semibold mb-2">Personal Statistics</h3>
-          <p class="text-gray-600 dark:text-gray-300">
-            Gain insights into your viewing habits, including leagues, competitions,
-            and match counts over time.
-          </p>
-        </div>
-      </div>
+      <h2 class="text-3xl font-bold text-center mb-8">Supported Sports & Competitions</h2>
+      <p class="text-center text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
+        Trakket currently supports logging of both football and motorsport, covering popular competitions like the Premier League, La Liga, Formula 1, and more. We’re continuously expanding — more sports and leagues are coming soon, including basketball, tennis, and additional football and racing series.
+      </p>
     </section>
 
-    <!-- Future Features -->
+    <!-- What Makes Trakket Different -->
     <section class="max-w-7xl mx-auto px-6 lg:px-20 py-6">
-      <h2 class="text-3xl font-bold text-center mb-8">Future Features</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <h2 class="text-3xl font-bold text-center mb-8">How Trakket Stands Out</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow hover:shadow-lg transition">
-          <i class="pi pi-star text-4xl text-indigo-500 mb-4"></i>
-          <h3 class="text-xl font-semibold mb-2">More Sports</h3>
+          <h3 class="text-xl font-semibold mb-2">Personal Match Tracking</h3>
           <p class="text-gray-600 dark:text-gray-300">
-            Support for additional leagues and sports like basketball, F1, and more.
+            Unlike apps that just show scores or schedules, Trakket focuses on the matches <strong>you</strong> have watched — making it easy to keep a record of your viewing activity over time.
           </p>
         </div>
         <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow hover:shadow-lg transition">
-          <i class="pi pi-chart-bar text-4xl text-green-500 mb-4"></i>
-          <h3 class="text-xl font-semibold mb-2">Enhanced Stats</h3>
+          <h3 class="text-xl font-semibold mb-2">Insights into Viewing Habits</h3>
           <p class="text-gray-600 dark:text-gray-300">
-            Deeper analytics with advanced visualizations.
-          </p>
-        </div>
-        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow hover:shadow-lg transition">
-          <i class="pi pi-bell text-4xl text-cyan-500 mb-4"></i>
-          <h3 class="text-xl font-semibold mb-2">Notifications</h3>
-          <p class="text-gray-600 dark:text-gray-300">
-            Get reminders to log matches or follow favorite competitions.
+            Trakket helps you understand your watching patterns — like your favorite leagues, frequency of viewings, and trends over time — all in one place.
           </p>
         </div>
       </div>
@@ -75,16 +49,16 @@
 
     <!-- Developer Section -->
     <section class="max-w-4xl mx-auto px-6 py-12 text-center">
-        <h2 class="text-2xl font-bold mb-4">About the Developer</h2>
-        <p class="text-gray-700 dark:text-gray-300 mb-4">
-          Trakket is developed and maintained by a single independent developer.
-        </p>
-        <p class="text-gray-700 dark:text-gray-300">
-          For support, inquiries, or feature ideas, reach out at
-          <a href="mailto:sportswatchtracker@gmail.com" class="text-indigo-500 underline">
-            sportswatchtracker@gmail.com
-          </a>.
-        </p>
+      <h2 class="text-2xl font-bold mb-4">About the Developer</h2>
+      <p class="text-gray-700 dark:text-gray-300 mb-4">
+        Trakket is developed and maintained by a single independent developer.
+      </p>
+      <p class="text-gray-700 dark:text-gray-300">
+        Got feedback or ideas? Reach out at
+        <a href="mailto:sportswatchtracker@gmail.com" class="text-indigo-500 underline">
+          sportswatchtracker@gmail.com
+        </a>.
+      </p>
     </section>
   </div>
 </template>
@@ -93,5 +67,14 @@
 definePageMeta({
   public: true,
   title: 'About'
+})
+
+useSeoMeta({
+  title: "About Trakket",
+  description: "Learn about Trakket — a personal sports viewing tracker for logging football and motorsport matches you’ve watched, with insights into your watching habits.",
+  ogTitle: "About Trakket",
+  ogDescription: "Discover how Trakket helps you log the football matches and motorsport races you’ve watched and gain insights into your sports viewing history.",
+  ogImage: "/favicon-32x32.png",
+  ogUrl: "https://www.trakket.com/about",
 })
 </script>

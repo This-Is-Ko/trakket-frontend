@@ -100,4 +100,13 @@ definePageMeta({
   public: true,
   title: 'Login'
 })
+
+useSeoMeta({
+  title: "Login to Trakket",
+  description: "Access your Trakket account to track your sports viewing history and explore insights into your habits.",
+  ogTitle: "Login to Trakket",
+  ogDescription: "Log in to your Trakket account and continue tracking the sports you watch.",
+  ogImage: "/favicon-32x32.png",
+  ogUrl: "https://www.trakket.com/login"
+})
 </script>

@@ -209,4 +209,13 @@ definePageMeta({
   public: true,
   title: 'Signup'
 })
+
+useSeoMeta({
+  title: "Sign Up for Trakket",
+  description: "Create your Trakket account and start logging football matches, motorsport races, and more. Track your sports viewing habits today.",
+  ogTitle: "Sign Up for Trakket",
+  ogDescription: "Create your Trakket account and track every sports match you watch.",
+  ogImage: "/favicon-32x32.png",
+  ogUrl: "https://www.trakket.com/signup"
+})
 </script>

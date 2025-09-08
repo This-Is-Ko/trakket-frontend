@@ -160,4 +160,13 @@ definePageMeta({
   public: true,
   title: "Home",
 });
+
+useSeoMeta({
+  title: "Track the sports you watch | Trakket",
+  description: "Log your sports viewing, explore habits, and gain insights with Trakket.",
+  ogTitle: "Track the sports you watch | Trakket",
+  ogDescription: "Log your sports viewing, explore habits, and gain insights with Trakket.",
+  ogImage: "/favicon-32x32.png",
+  ogUrl: "https://www.trakket.com/",
+})
 </script>

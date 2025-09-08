@@ -72,4 +72,12 @@ definePageMeta({
   public: true,
   title: 'Privacy Policy'
 })
+
+useSeoMeta({
+  title: "Privacy Policy - Trakket",
+  description: "Read the Trakket Privacy Policy. Learn how we use cookies, authentication, and analytics to improve your experience.",
+  ogTitle: "Privacy Policy - Trakket",
+  ogImage: "/favicon-32x32.png",
+  ogUrl: "https://www.trakket.com/privacy-policy",
+})
 </script>
