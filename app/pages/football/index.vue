@@ -1,15 +1,39 @@
 <template>
   <div class="px-2 sm:px-4 py-4">
     <h1 class="text-4xl font-bold text-center mb-6">Football</h1>
-    <p class="text-center text-gray-500 mb-6">
+    <p class="text-center text-gray-500 mb-6" v-if="activeTab === 'competition'">
       Track your watched matches for {{ competitionFilter }}
     </p>
+    <p class="text-center text-gray-500 mb-6" v-else>
+      Browse and track matches by team
+    </p>
+
+    <!-- Tabs: Competitions | Teams -->
+    <div class="mb-6 flex justify-center">
+      <nav class="inline-flex rounded-lg border border-gray-200 overflow-hidden" aria-label="Football views">
+        <button
+            @click="goTab('competition')"
+            :class="activeTab === 'competition' ? 'bg-emerald-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'"
+            class="px-4 py-2 text-sm font-medium"
+            :aria-current="activeTab === 'competition' ? 'page' : undefined"
+        >
+          Competitions
+        </button>
+        <button
+            @click="goTab('teams')"
+            :class="['px-4 py-2 text-sm font-medium border-l border-gray-200', activeTab === 'teams' ? 'bg-emerald-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50']"
+            :aria-current="activeTab === 'teams' ? 'page' : undefined"
+        >
+          Teams
+        </button>
+      </nav>
+    </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-8 gap-6">
-      <!-- Sidebar: Leagues / Competitions -->
-      <div class="lg:col-span-2 order-1 lg:order-1">
+      <!-- Sidebar: Competitions -->
+      <div class="lg:col-span-2 order-1 lg:order-1" v-if="activeTab === 'competition'">
         <Card>
-          <template #title>Leagues</template>
+          <template #title>Competitions</template>
           <template #content>
             <ul class="space-y-2">
               <li
@@ -29,6 +53,23 @@
         </Card>
       </div>
 
+      <!-- Sidebar: Teams (for Teams tab) -->
+      <div class="lg:col-span-2 order-1 lg:order-1" v-else>
+        <Card>
+          <template #title>Teams</template>
+          <template #content>
+            <Select
+                v-model="teamId"
+                :options="teamOptions"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="Select Team"
+                class="w-full"
+            />
+          </template>
+        </Card>
+      </div>
+
       <!-- Right sidebar: Event Status Filter -->
       <div class="lg:col-span-2 order-2 lg:order-3">
         <Card>
@@ -42,19 +83,17 @@
                 placeholder="Select Status"
                 class="w-full"
             />
-
-            <!-- Refer to round as week in football-->
-            <div class="mt-4">
-              <label class="block text-sm text-gray-600 mb-2">Week</label>
-              <Select
-                  v-model="round"
-                  :options="WEEK_OPTIONS"
-                  optionLabel="label"
-                  optionValue="value"
-                  placeholder="Select Week"
-                  class="w-full"
-              />
-            </div>
+<!--            <div v-if="activeTab === 'competition'" class="mt-4">-->
+<!--              <label class="block text-sm text-gray-600 mb-2">Week</label>-->
+<!--              <Select-->
+<!--                  v-model="round"-->
+<!--                  :options="WEEK_OPTIONS"-->
+<!--                  optionLabel="label"-->
+<!--                  optionValue="value"-->
+<!--                  placeholder="Select Week"-->
+<!--                  class="w-full"-->
+<!--              />-->
+<!--            </div>-->
           </template>
         </Card>
       </div>
@@ -111,7 +150,7 @@
 import { ref, onMounted, watch } from "vue";
 import { useToast } from 'primevue/usetoast';
 import EventAccordion from "~/components/football/EventAccordion.vue";
-import { fetchFootballEventsWithStatus, updateFootballEventWatchStatus } from "~/services/footballEvents";
+import { fetchFootballEventsWithStatus, updateFootballEventWatchStatus, fetchFootballTeams, type FootballTeam } from "~/services/footballEvents";
 import type { FootballEventWrapper } from "~/types/football/events";
 import type { WatchedStatus } from "~/types/events";
 const { formatEnumToString } = useFormatters();
@@ -134,9 +173,14 @@ const STATUS_OPTIONS = [
 ];
 
 const events = ref<FootballEventWrapper[]>([]);
+const activeTab = ref<'competition' | 'teams'>('competition');
 const competitionFilter = ref("English Premier League"); // default
 const eventStatusFilter = ref<"SCHEDULED" | "COMPLETED" | null>("COMPLETED");
 const round = ref<number | null>(null);
+const teamOptions = ref<{ label: string, value: number | null }[]>([{ label: "All teams", value: null }]);
+const teamId = ref<number | null>(null);
+const teams = ref<FootballTeam[]>([]);
+const fetchedTeams = ref(false);
 const page = ref(0);
 const pageSize = 12;
 const toast = useToast();
@@ -149,15 +193,22 @@ async function loadFootballEvents() {
   loading.value = true;
   fetchError.value = false;
   try {
-    const params: any = {
-      competition: competitionFilter.value,
-      page: page.value,
-      pageSize: pageSize,
-      ascending: false
-    };
+    const params: any = activeTab.value === 'competition'
+        ? {
+          competition: competitionFilter.value,
+          page: page.value,
+          pageSize: pageSize,
+          ascending: false
+        }
+        : {
+          competition: null,
+          teamId: teamId.value,
+          page: page.value,
+          pageSize: pageSize,
+          ascending: false
+        };
     if (eventStatusFilter.value !== null) params.status = eventStatusFilter.value;
-    // team filter removed from main football page
-    if (round.value !== null) params.round = round.value;
+    if (activeTab.value === 'competition' && round.value !== null) params.round = round.value;
     const res = await fetchFootballEventsWithStatus(params);
 
     events.value = res.events ?? [];
@@ -179,12 +230,38 @@ async function loadFootballEvents() {
 }
 
 // Reset page when filters change
-watch([competitionFilter, eventStatusFilter, round], () => {
+watch([competitionFilter, eventStatusFilter, round, teamId, activeTab], () => {
   page.value = 0;
 });
 
-onMounted(loadFootballEvents);
-watch([competitionFilter, eventStatusFilter, round, page], loadFootballEvents);
+function goTab(tab: 'competition' | 'teams') {
+  activeTab.value = tab;
+  if (tab === 'teams' && teams.value.length === 0) {
+    loadTeams();
+  }
+}
+
+async function loadTeams() {
+  if (fetchedTeams.value) return;
+  try {
+    const list = await fetchFootballTeams();
+    teams.value = list;
+    teamOptions.value = [
+      { label: 'All teams', value: null },
+      ...list.map(t => ({ label: t.name, value: t.id }))
+    ];
+    fetchedTeams.value = true;
+  } catch (_) {
+    teamOptions.value = [{ label: 'All teams', value: null }];
+  }
+}
+
+onMounted(async () => {
+  await loadFootballEvents();
+});
+
+
+watch([competitionFilter, eventStatusFilter, round, teamId, page, activeTab], loadFootballEvents);
 
 function updateWatchStatus(eventId: number, newStatus: WatchedStatus) {
   const wrapper = events.value.find((w) => w.details.id === eventId);
