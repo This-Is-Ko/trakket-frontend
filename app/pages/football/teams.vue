@@ -1,38 +1,29 @@
 <template>
   <div class="px-2 sm:px-4 py-4">
-    <h1 class="text-4xl font-bold text-center mb-6">Football</h1>
-    <p class="text-center text-gray-500 mb-6">
-      Track your watched matches for {{ competitionFilter }}
-    </p>
+    <h1 class="text-4xl font-bold text-center mb-6">Football Teams</h1>
 
     <div class="grid grid-cols-1 lg:grid-cols-8 gap-6">
-      <!-- Sidebar: Leagues / Competitions -->
+      <!-- Sidebar: Teams -->
       <div class="lg:col-span-2 order-1 lg:order-1">
         <Card>
-          <template #title>Leagues</template>
+          <template #title>Teams</template>
           <template #content>
-            <ul class="space-y-2">
-              <li
-                  v-for="comp in COMPETITIONS"
-                  :key="comp"
-                  @click="competitionFilter = comp"
-                  class="cursor-pointer px-3 py-2 rounded-md"
-                  :class="{
-              'bg-blue-100 font-semibold': competitionFilter === comp,
-              'hover:bg-gray-100': competitionFilter !== comp
-            }"
-              >
-                {{ comp }}
-              </li>
-            </ul>
+            <Select
+                v-model="teamId"
+                :options="teamOptions"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="Select Team"
+                class="w-full"
+            />
           </template>
         </Card>
       </div>
 
-      <!-- Right sidebar: Event Status Filter -->
+      <!-- Right sidebar: Event Status -->
       <div class="lg:col-span-2 order-2 lg:order-3">
         <Card>
-          <template #title>Event Status</template>
+          <template #title>Filters</template>
           <template #content>
             <Select
                 v-model="eventStatusFilter"
@@ -42,26 +33,12 @@
                 placeholder="Select Status"
                 class="w-full"
             />
-
-            <!-- Refer to round as week in football-->
-            <div class="mt-4">
-              <label class="block text-sm text-gray-600 mb-2">Week</label>
-              <Select
-                  v-model="round"
-                  :options="WEEK_OPTIONS"
-                  optionLabel="label"
-                  optionValue="value"
-                  placeholder="Select Week"
-                  class="w-full"
-              />
-            </div>
           </template>
         </Card>
       </div>
 
       <!-- Main content: Accordion -->
       <div class="lg:col-span-4 order-3 lg:order-2">
-        <!-- Loading / Error -->
         <div v-if="loading" class="text-center py-10 text-gray-500">
           <ProgressSpinner />
         </div>
@@ -86,7 +63,6 @@
           </div>
         </div>
 
-        <!-- Pagination -->
         <div class="flex justify-center items-center gap-4 mt-4">
           <Button @click="prevPage" :disabled="page === 0" class="px-3 py-1 border rounded">
             Prev
@@ -106,26 +82,19 @@
   </div>
 </template>
 
-
 <script setup lang="ts">
 import { ref, onMounted, watch } from "vue";
 import { useToast } from 'primevue/usetoast';
 import EventAccordion from "~/components/football/EventAccordion.vue";
-import { fetchFootballEventsWithStatus, updateFootballEventWatchStatus } from "~/services/footballEvents";
+import { fetchFootballEventsWithStatus, updateFootballEventWatchStatus, fetchFootballTeams, type FootballTeam } from "~/services/footballEvents";
 import type { FootballEventWrapper } from "~/types/football/events";
 import type { WatchedStatus } from "~/types/events";
-const { formatEnumToString } = useFormatters();
-import { COMPETITIONS } from "~/constants/football/competitions";
 import {useUserStore} from "~/stores/useUserStore";
 import axios from "axios";
-import {useFormatters} from "~/composables/useFormatters";
 
-const WEEK_OPTIONS = [
-  { label: "All weeks", value: null },
-  { label: "Week 1", value: 1 },
-  { label: "Week 2", value: 2 },
-  { label: "Week 3", value: 3 },
-];
+const teamOptions = ref<{ label: string, value: number | null }[]>([
+  { label: "All teams", value: null }
+]);
 
 const STATUS_OPTIONS = [
   { label: "All statuses", value: null },
@@ -134,9 +103,9 @@ const STATUS_OPTIONS = [
 ];
 
 const events = ref<FootballEventWrapper[]>([]);
-const competitionFilter = ref("English Premier League"); // default
 const eventStatusFilter = ref<"SCHEDULED" | "COMPLETED" | null>("COMPLETED");
-const round = ref<number | null>(null);
+const teamId = ref<number | null>(null);
+const teams = ref<FootballTeam[]>([]);
 const page = ref(0);
 const pageSize = 12;
 const toast = useToast();
@@ -150,21 +119,19 @@ async function loadFootballEvents() {
   fetchError.value = false;
   try {
     const params: any = {
-      competition: competitionFilter.value,
+      competition: null,
+      teamId: teamId.value,
       page: page.value,
       pageSize: pageSize,
       ascending: false
     };
     if (eventStatusFilter.value !== null) params.status = eventStatusFilter.value;
-    // team filter removed from main football page
-    if (round.value !== null) params.round = round.value;
     const res = await fetchFootballEventsWithStatus(params);
 
     events.value = res.events ?? [];
     lastPage.value = res.last ?? false;
     fetchError.value = false;
   } catch (err) {
-    // clear results and show placeholder
     events.value = [];
     fetchError.value = true;
     if (axios.isAxiosError(err)) {
@@ -178,13 +145,30 @@ async function loadFootballEvents() {
   }
 }
 
-// Reset page when filters change
-watch([competitionFilter, eventStatusFilter, round], () => {
+async function loadTeams() {
+  try {
+    const res = await fetchFootballTeams();
+    teams.value = res;
+    teamOptions.value = [
+      { label: "All teams", value: null },
+      ...teams.value.map(t => ({ label: t.name, value: t.id }))
+    ];
+  } catch (_) {
+    teamOptions.value = [
+      { label: "All teams", value: null }
+    ];
+  }
+}
+
+watch([teamId, eventStatusFilter], () => {
   page.value = 0;
 });
 
-onMounted(loadFootballEvents);
-watch([competitionFilter, eventStatusFilter, round, page], loadFootballEvents);
+onMounted(async () => {
+  await loadTeams();
+  await loadFootballEvents();
+});
+watch([teamId, eventStatusFilter, page], loadFootballEvents);
 
 function updateWatchStatus(eventId: number, newStatus: WatchedStatus) {
   const wrapper = events.value.find((w) => w.details.id === eventId);
@@ -217,6 +201,8 @@ function nextPage() {
 }
 
 definePageMeta({
-  title: "Football"
+  title: "Football Teams"
 });
 </script>
+
+

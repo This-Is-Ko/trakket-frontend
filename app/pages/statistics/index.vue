@@ -32,7 +32,7 @@
               dark:border-surface-700 flex flex-col gap-4 w-full max-w-lg h-full">
           <h2 class="text-xl font-semibold mb-4 text-center">Watch Status Distribution</h2>
           <div class="flex-grow">
-            <Chart type="pie" :data="watchStatusChart" :options="chartOptions" class="w-full h-full"/>
+            <Chart type="pie" :data="watchStatusChart" :options="pieChartOptions" class="w-full h-full"/>
           </div>
         </div>
       </div>
@@ -45,7 +45,7 @@
           <Chart
               type="bar"
               :data="sportsMixChart"
-              :options="chartOptions"
+              :options="barChartOptions"
               :height="0"
           style="flex-grow:1; width:100%;"
           />
@@ -66,7 +66,18 @@ const sportsMixChart = ref();
 const loading = ref(true);
 const fetchError = ref(false);
 
-const chartOptions = {
+const pieChartOptions = {
+  responsive: true,
+  plugins: {
+    legend: { position: "top" }
+  },
+  scales: {
+    x: { display: false, grid: { display: false } },
+    y: { display: false, grid: { display: false } }
+  }
+};
+
+const barChartOptions = {
   responsive: true,
   plugins: {
     legend: { position: "top" }

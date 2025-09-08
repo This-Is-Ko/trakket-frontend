@@ -47,3 +47,20 @@ export async function updateFootballEventWatchStatus(eventId: number, status: Wa
     });
     return data;
 }
+
+export interface FootballTeam {
+    id: number;
+    name: string;
+    shortName: string | null;
+    country: string | null;
+    logoUrl: string | null;
+    alternativeNames: string[] | null;
+    gender: string | null;
+}
+
+export async function fetchFootballTeams(): Promise<FootballTeam[]> {
+    const api = createApi();
+    const res = await api.get("/api/football/teams");
+    const data = res.data ?? [];
+    return Array.isArray(data) ? data : [];
+}

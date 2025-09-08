@@ -1,5 +1,5 @@
 <template>
-  <div class="px-2 sm:px-4 py-4">
+  <div class="px-2 sm:px-4 py-4 overflow-x-hidden">
     <h1 class="text-3xl font-bold text-center mb-6">Motorsport Statistics</h1>
 
     <div v-if="loading" class="flex justify-center py-10">
@@ -8,10 +8,10 @@
     <div v-else-if="fetchError" class="text-center py-10 text-gray-500">
       <Message severity="error">Unable to load statistics. Please try again later.</Message>
     </div>
-    <div v-else class="grid md:grid-cols-3 gap-8">
+    <div v-else class="grid md:grid-cols-3 gap-8 min-w-0">
 
       <!-- Watch Status Cards -->
-      <div class="md:col-span-3">
+      <div class="md:col-span-3 min-w-0">
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <div
               v-for="(count, status) in motorsportWatchStatusDistribution"
@@ -29,36 +29,37 @@
 
       <!-- Watch Status Distribution -->
       <div class="bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200
-              dark:border-surface-700 flex flex-col gap-4 w-full h-[420px]">
+              dark:border-surface-700 flex flex-col gap-4 w-full h-[420px] overflow-hidden min-w-0">
         <h2 class="text-xl font-semibold text-center">Watch Status Distribution</h2>
         <div class="flex-1 min-h-0">
-          <Chart type="pie" :data="watchStatusChart" :options="chartOptions" class="w-full h-full"/>
+          <Chart type="pie" :data="watchStatusChart" :options="pieChartOptions" class="w-full h-full"/>
         </div>
       </div>
 
       <!-- Events Per Competition -->
       <div class="bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200
-              dark:border-surface-700 flex flex-col gap-4 w-full h-[420px]">
+              dark:border-surface-700 flex flex-col gap-4 w-full h-[420px] overflow-hidden min-w-0">
         <h2 class="text-xl font-semibold text-center">Events per Competition</h2>
         <div class="flex-1 min-h-0">
-          <Chart type="bar" :data="eventsPerCompetitionChart" :options="chartOptions" class="w-full h-full"/>
+          <Chart type="bar" :data="eventsPerCompetitionChart" :options="barChartOptions" class="w-full h-full"/>
         </div>
       </div>
 
       <!-- Season Coverage -->
       <div class="bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200
-              dark:border-surface-700 flex flex-col gap-4 w-full h-[420px]">
+              dark:border-surface-700 flex flex-col gap-4 w-full h-[420px] overflow-hidden min-w-0">
         <h2 class="text-xl font-semibold text-center">Season Coverage (%)</h2>
         <div class="flex-1 min-h-0">
-          <Chart type="bar" :data="seasonCoverageChart" :options="chartOptions" class="w-full h-full"/>
+          <Chart type="bar" :data="seasonCoverageChart" :options="barChartOptions" class="w-full h-full"/>
         </div>
       </div>
 
       <!-- Recent Events Table -->
       <div class="md:col-span-3 bg-surface-0 dark:bg-surface-900 p-6 rounded-xl border border-surface-200
-              dark:border-surface-700 flex flex-col gap-4 w-full">
+              dark:border-surface-700 flex flex-col gap-4 w-full min-w-0">
         <h2 class="text-xl font-semibold text-center">Recent Events</h2>
-        <DataTable :value="recentEvents" class="w-full" :responsiveLayout="'scroll'">
+        <div class="w-full overflow-x-auto">
+          <DataTable :value="recentEvents" class="w-full" :responsiveLayout="'scroll'">
           <Column>
             <template #body="slotProps">
               <img v-if="slotProps.data.details.flagUrl" :src="slotProps.data.details.flagUrl" alt="flag" class="h-6 w-auto" />
@@ -94,7 +95,8 @@
               {{ formatEnumToString(slotProps.data.status) }}
             </template>
           </Column>
-        </DataTable>
+          </DataTable>
+        </div>
       </div>
     </div>
   </div>
@@ -114,7 +116,17 @@ const seasonCoverageChart = ref({});
 const recentEvents = ref<RecentEventMotorsport[]>([]);
 const motorsportWatchStatusDistribution = ref<Record<string, number>>({});
 
-const chartOptions = {
+const pieChartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: { legend: { position: "top" } },
+  scales: {
+    x: { display: false, grid: { display: false } },
+    y: { display: false, grid: { display: false } }
+  }
+};
+
+const barChartOptions = {
   responsive: true,
   maintainAspectRatio: false,
   plugins: { legend: { position: "top" } }
