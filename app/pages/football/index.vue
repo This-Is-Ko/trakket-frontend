@@ -1,8 +1,9 @@
 <template>
   <div class="px-2 sm:px-4 py-4">
     <h1 class="text-4xl font-bold text-center mb-6">Football</h1>
+
     <p class="text-center text-gray-500 mb-6" v-if="activeTab === 'competition'">
-      Track your watched matches for {{ competitionFilter }}
+      Track your watched matches for {{ competitionFilter?.displayName ?? 'All competitions' }}
     </p>
     <p class="text-center text-gray-500 mb-6" v-else>
       Browse and track matches by team
@@ -35,18 +36,26 @@
         <Card>
           <template #title>Competitions</template>
           <template #content>
-            <ul class="space-y-2">
+            <div v-if="loadingCompetitions" class="flex justify-center py-6">
+              <ProgressSpinner />
+            </div>
+
+            <div v-else-if="competitionsError" class="text-center text-gray-500 py-4">
+              Unable to load competitions. Please try again later.
+            </div>
+
+            <ul v-else class="space-y-2">
               <li
-                  v-for="comp in COMPETITIONS"
-                  :key="comp"
+                  v-for="comp in competitions"
+                  :key="comp.displayName"
                   @click="competitionFilter = comp"
                   class="cursor-pointer px-3 py-2 rounded-md"
                   :class="{
-              'bg-blue-100 font-semibold': competitionFilter === comp,
-              'hover:bg-gray-100': competitionFilter !== comp
-            }"
+                    'bg-blue-100 font-semibold': competitionFilter?.displayName === comp.displayName,
+                    'hover:bg-gray-100': competitionFilter?.displayName !== comp.displayName
+                  }"
               >
-                {{ comp }}
+                {{ comp.displayName }}
               </li>
             </ul>
           </template>
@@ -83,17 +92,6 @@
                 placeholder="Select Status"
                 class="w-full"
             />
-<!--            <div v-if="activeTab === 'competition'" class="mt-4">-->
-<!--              <label class="block text-sm text-gray-600 mb-2">Week</label>-->
-<!--              <Select-->
-<!--                  v-model="round"-->
-<!--                  :options="WEEK_OPTIONS"-->
-<!--                  optionLabel="label"-->
-<!--                  optionValue="value"-->
-<!--                  placeholder="Select Week"-->
-<!--                  class="w-full"-->
-<!--              />-->
-<!--            </div>-->
           </template>
         </Card>
       </div>
@@ -145,19 +143,22 @@
   </div>
 </template>
 
-
 <script setup lang="ts">
 import { ref, onMounted, watch } from "vue";
 import { useToast } from 'primevue/usetoast';
 import EventAccordion from "~/components/football/EventAccordion.vue";
-import { fetchFootballEventsWithStatus, updateFootballEventWatchStatus, fetchFootballTeams, type FootballTeam } from "~/services/footballEvents";
+import {
+  fetchFootballEventsWithStatus,
+  updateFootballEventWatchStatus,
+  fetchFootballTeams,
+  fetchFootballCompetitions,
+  type FootballTeam,
+  type FootballCompetition
+} from "~/services/footballEvents";
 import type { FootballEventWrapper } from "~/types/football/events";
 import type { WatchedStatus } from "~/types/events";
-const { formatEnumToString } = useFormatters();
-import { COMPETITIONS } from "~/constants/football/competitions";
-import {useUserStore} from "~/stores/useUserStore";
+import { useUserStore } from "~/stores/useUserStore";
 import axios from "axios";
-import {useFormatters} from "~/composables/useFormatters";
 
 const WEEK_OPTIONS = [
   { label: "All weeks", value: null },
@@ -174,20 +175,26 @@ const STATUS_OPTIONS = [
 
 const events = ref<FootballEventWrapper[]>([]);
 const activeTab = ref<'competition' | 'teams'>('competition');
-const competitionFilter = ref("English Premier League");
+const competitionFilter = ref<FootballCompetition | null>(null);
 const eventStatusFilter = ref<"SCHEDULED" | "COMPLETED" | null>("COMPLETED");
 const round = ref<number | null>(null);
 const teamOptions = ref<{ label: string, value: number | null }[]>([{ label: "All teams", value: null }]);
 const teamId = ref<number | null>(null);
 const teams = ref<FootballTeam[]>([]);
+
+const competitions = ref<FootballCompetition[]>([]);
+const competitionsError = ref(false);
+const loadingCompetitions = ref(false);
+
 const fetchedTeams = ref(false);
+const fetchedCompetitions = ref(false);
 const page = ref(0);
 const pageSize = 12;
 const toast = useToast();
 const loading = ref(false);
 const lastPage = ref(true);
 const fetchError = ref(false);
-const userStore = useUserStore()
+const userStore = useUserStore();
 
 async function loadFootballEvents() {
   loading.value = true;
@@ -195,7 +202,7 @@ async function loadFootballEvents() {
   try {
     const params: any = activeTab.value === 'competition'
         ? {
-          competition: competitionFilter.value,
+          competition: competitionFilter.value?.displayName ?? null,
           page: page.value,
           pageSize: pageSize,
           ascending: false
@@ -207,15 +214,16 @@ async function loadFootballEvents() {
           pageSize: pageSize,
           ascending: false
         };
+
     if (eventStatusFilter.value !== null) params.status = eventStatusFilter.value;
     if (activeTab.value === 'competition' && round.value !== null) params.round = round.value;
+
     const res = await fetchFootballEventsWithStatus(params);
 
     events.value = res.events ?? [];
     lastPage.value = res.last ?? false;
     fetchError.value = false;
   } catch (err) {
-    // clear results and show placeholder
     events.value = [];
     fetchError.value = true;
     if (axios.isAxiosError(err)) {
@@ -248,9 +256,9 @@ async function loadTeams() {
     teams.value = list;
     teamOptions.value = [
       { label: 'All teams', value: null },
-      ...list.map(t => ({ 
-        label: t.gender ? `${t.name} (${t.gender})` : t.name, 
-        value: t.id 
+      ...list.map(t => ({
+        label: t.gender ? `${t.name} (${t.gender})` : t.name,
+        value: t.id
       }))
     ];
     fetchedTeams.value = true;
@@ -259,11 +267,38 @@ async function loadTeams() {
   }
 }
 
+async function loadCompetitions() {
+  if (fetchedCompetitions.value) return;
+  loadingCompetitions.value = true;
+  competitionsError.value = false;
+
+  try {
+    const list = await fetchFootballCompetitions();
+    competitions.value = list;
+
+    if (list.length > 0) {
+      competitionFilter.value = list[0] ?? null;
+    } else {
+      competitionFilter.value = null;
+      competitionsError.value = true;
+    }
+
+    fetchedCompetitions.value = true;
+  } catch (_) {
+    competitions.value = [];
+    competitionsError.value = true;
+  } finally {
+    loadingCompetitions.value = false;
+  }
+}
+
 onMounted(async () => {
+  // load competitions first, then events
+  await loadCompetitions();
   await loadFootballEvents();
 });
 
-
+// watch triggers loading when filters or pagination change
 watch([competitionFilter, eventStatusFilter, round, teamId, page, activeTab], loadFootballEvents);
 
 function updateWatchStatus(eventId: number, newStatus: WatchedStatus) {

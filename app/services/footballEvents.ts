@@ -9,6 +9,21 @@ export interface FetchEventsParams {
     ascending: boolean;
 }
 
+export interface FootballCompetition {
+    displayName: string;
+    gender: string;
+}
+
+export interface FootballTeam {
+    id: number;
+    name: string;
+    shortName: string | null;
+    country: string | null;
+    logoUrl: string | null;
+    alternativeNames: string[] | null;
+    gender: string | null;
+}
+
 export async function fetchFootballEvents(params: FetchEventsParams) {
     const api = createApi();
     const res = await api.get("/api/football/events", {
@@ -48,14 +63,11 @@ export async function updateFootballEventWatchStatus(eventId: number, status: Wa
     return data;
 }
 
-export interface FootballTeam {
-    id: number;
-    name: string;
-    shortName: string | null;
-    country: string | null;
-    logoUrl: string | null;
-    alternativeNames: string[] | null;
-    gender: string | null;
+export async function fetchFootballCompetitions(): Promise<FootballCompetition[]> {
+    const api = createApi();
+    const res = await api.get("/api/football/competitions");
+    const data = res.data ?? [];
+    return Array.isArray(data) ? data : [];
 }
 
 export async function fetchFootballTeams(): Promise<FootballTeam[]> {
