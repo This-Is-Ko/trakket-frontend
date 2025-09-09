@@ -58,8 +58,8 @@
           <dt class="font-semibold">Competition:</dt>
           <dd>{{ event.competition }}</dd>
 
-          <dt class="font-semibold">Week:</dt>
-          <dd>{{ event.round ?? "-" }}</dd>
+<!--          <dt class="font-semibold">Week:</dt>-->
+<!--          <dd>{{ event.round ?? "-" }}</dd>-->
 
           <dt class="font-semibold">Start Time (Local time):</dt>
           <dd>{{ formatDate(event.dateTime) }}</dd>

@@ -174,7 +174,7 @@ const STATUS_OPTIONS = [
 
 const events = ref<FootballEventWrapper[]>([]);
 const activeTab = ref<'competition' | 'teams'>('competition');
-const competitionFilter = ref("English Premier League"); // default
+const competitionFilter = ref("English Premier League");
 const eventStatusFilter = ref<"SCHEDULED" | "COMPLETED" | null>("COMPLETED");
 const round = ref<number | null>(null);
 const teamOptions = ref<{ label: string, value: number | null }[]>([{ label: "All teams", value: null }]);
@@ -248,7 +248,10 @@ async function loadTeams() {
     teams.value = list;
     teamOptions.value = [
       { label: 'All teams', value: null },
-      ...list.map(t => ({ label: t.name, value: t.id }))
+      ...list.map(t => ({ 
+        label: t.gender ? `${t.name} (${t.gender})` : t.name, 
+        value: t.id 
+      }))
     ];
     fetchedTeams.value = true;
   } catch (_) {
