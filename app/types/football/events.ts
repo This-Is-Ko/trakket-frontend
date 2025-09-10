@@ -3,7 +3,7 @@ import type {WatchedStatus} from "~/types/events";
 export interface FootballEventDetails {
     id: number;
     dateTime: string;
-    competition: string;
+    competition: FootballCompetition;
     round?: string | null;
     location?: string | null;
     status: "COMPLETED" | "SCHEDULED" | string;
@@ -23,4 +23,9 @@ export interface FootballEventDetails {
 export interface FootballEventWrapper {
     details: FootballEventDetails;
     status: WatchedStatus;
+}
+
+export interface FootballCompetition {
+    displayName: string;
+    gender: string | null;
 }
