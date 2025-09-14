@@ -22,7 +22,7 @@
       <div class="space-y-3 text-sm">
         <dl class="grid grid-cols-2 gap-x-4 gap-y-2">
           <dt class="font-semibold">Competition:</dt>
-          <dd>{{ event.competition ?? "-" }}</dd>
+          <dd>{{ event.competition.displayName ?? "-" }}</dd>
 
           <dt class="font-semibold">Round:</dt>
           <dd class="truncate">{{ event.round ?? "-" }}</dd>

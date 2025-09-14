@@ -3,7 +3,7 @@ export type WatchedStatus = "UNWATCHED" | "IN_PERSON" | "LIVE" | "REPLAY" | "HIG
 export interface MotorsportEventDetails {
     id: number;
     dateTime: string;
-    competition: string;
+    competition: MotorsportCompetition;
     round?: string | null;
     location?: string | null;
     status: "COMPLETED" | "SCHEDULED" | string;
