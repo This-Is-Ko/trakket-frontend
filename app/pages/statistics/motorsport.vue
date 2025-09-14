@@ -77,7 +77,7 @@
           </Column>
           <Column header="Competition">
             <template #body="slotProps">
-              {{ slotProps.data.details.competition }}
+              {{ slotProps.data.details.competition.displayName }}
             </template>
           </Column>
           <Column header="Date">
