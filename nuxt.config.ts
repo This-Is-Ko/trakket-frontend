@@ -47,7 +47,8 @@ export default defineNuxtConfig({
       '@primevue/nuxt-module',
       "@pinia/nuxt",
       'pinia-plugin-persistedstate/nuxt',
-      "@nuxtjs/seo"
+      "@nuxtjs/seo",
+      'nuxt-umami',
     ],
     primevue: {
         options: {
@@ -70,5 +71,11 @@ export default defineNuxtConfig({
         public: {
             apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL || "http://localhost:8080" as string,
         },
+    },
+    umami: {
+        id: process.env.NUXT_UMAMI_ID,
+        host: 'https://cloud.umami.is',
+        autoTrack: true,
+        ignoreLocalhost: true
     },
 })

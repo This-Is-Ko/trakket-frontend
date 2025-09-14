@@ -35,6 +35,7 @@ npm install
 ```bash
 # Create .env file
 NUXT_PUBLIC_API_BASE_URL=http://localhost:8080
+NUXT_UMAMI_ID=1234
 ```
 
 4. Start the development server:
