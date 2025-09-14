@@ -29,3 +29,13 @@ export interface FootballCompetition {
     displayName: string;
     gender: string | null;
 }
+
+export interface FootballTeam {
+    id: number;
+    name: string;
+    shortName: string | null;
+    country: string | null;
+    logoUrl: string | null;
+    alternativeNames: string[] | null;
+    gender: string | null;
+}

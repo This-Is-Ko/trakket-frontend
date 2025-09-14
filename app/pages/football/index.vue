@@ -151,11 +151,9 @@ import {
   fetchFootballEventsWithStatus,
   updateFootballEventWatchStatus,
   fetchFootballTeams,
-  fetchFootballCompetitions,
-  type FootballTeam,
-  type FootballCompetition
+  fetchFootballCompetitions
 } from "~/services/footballEvents";
-import type { FootballEventWrapper } from "~/types/football/events";
+import type {FootballCompetition, FootballEventWrapper, FootballTeam} from "~/types/football/events";
 import type { WatchedStatus } from "~/types/events";
 import { useUserStore } from "~/stores/useUserStore";
 import axios from "axios";

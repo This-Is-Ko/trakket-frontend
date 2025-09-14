@@ -20,3 +20,7 @@ export interface MotorsportEventWrapper {
     details: MotorsportEventDetails;
     status: WatchedStatus;
 }
+
+export interface MotorsportCompetition {
+    displayName: string;
+}

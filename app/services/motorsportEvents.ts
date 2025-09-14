@@ -1,5 +1,6 @@
 import type {WatchedStatus} from "~/types/events";
 import {createApi} from "~/services/api";
+import type {MotorsportCompetition} from "~/types/motorsport/events";
 
 export interface FetchEventsParams {
     competition: string;
@@ -31,4 +32,11 @@ export async function updateMotorsportEventWatchStatus(eventId: number, status: 
         status,
     });
     return data;
+}
+
+export async function fetchMotorsportCompetitions(): Promise<MotorsportCompetition[]> {
+    const api = createApi();
+    const res = await api.get("/api/motorsport/competitions");
+    const data = res.data ?? [];
+    return Array.isArray(data) ? data : [];
 }

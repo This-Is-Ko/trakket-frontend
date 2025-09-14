@@ -1,5 +1,6 @@
 import type {WatchedStatus} from "~/types/events";
 import {createApi} from "~/services/api";
+import type {FootballCompetition, FootballTeam} from "~/types/football/events";
 
 export interface FetchEventsParams {
     competition: string;
@@ -7,21 +8,6 @@ export interface FetchEventsParams {
     page: number;
     pageSize: number;
     ascending: boolean;
-}
-
-export interface FootballCompetition {
-    displayName: string;
-    gender: string;
-}
-
-export interface FootballTeam {
-    id: number;
-    name: string;
-    shortName: string | null;
-    country: string | null;
-    logoUrl: string | null;
-    alternativeNames: string[] | null;
-    gender: string | null;
 }
 
 export async function fetchFootballEvents(params: FetchEventsParams) {
