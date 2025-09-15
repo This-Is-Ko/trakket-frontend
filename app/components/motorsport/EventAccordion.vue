@@ -13,7 +13,10 @@
 
         <!-- Right: Tag -->
         <div class="flex-shrink-0 w-[96px] flex justify-end">
-          <Tag v-show="localWatchStatus !== 'UNWATCHED'" icon="pi pi-check" />
+          <Tag
+              :icon="getWatchStatusIcon(localWatchStatus)"
+              :severity="localWatchStatus === 'UNWATCHED' ? 'secondary' : 'success'"
+          />
         </div>
       </div>
     </AccordionHeader>
@@ -31,7 +34,7 @@
           <dd>{{ event.circuitName ?? "-" }}</dd>
 
           <dt class="font-semibold">Start Time:</dt>
-          <dd>{{ formattedDate }}</dd>
+          <dd>{{ formatDate(event.dateTime) }}</dd>
 
           <dt class="font-semibold">Status:</dt>
           <dd>{{ formatEnumToString(event.status) }}</dd>
@@ -68,9 +71,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { ref, watch } from "vue";
 import type { WatchedStatus } from "~/types/events";
 import type { MotorsportEventDetails } from "~/types/motorsport/events";
+import {useWatchStatusIcon} from "~/composables/useWatchStatusIcon";
+import {useWatchStatusOptions} from "~/composables/useWatchStatusOptions";
+import {useFormatters} from "~/composables/useFormatters";
 
 const props = defineProps<{
   event: MotorsportEventDetails;
@@ -85,34 +91,9 @@ const panelValue = String(props.event.id);
 
 const localWatchStatus = ref<WatchedStatus>(props.watchStatus ?? "UNWATCHED");
 
-const watchStatusOptions = [
-  { label: "Unwatched", value: "UNWATCHED" },
-  { label: "In Person", value: "IN_PERSON" },
-  { label: "Live", value: "LIVE" },
-  { label: "Replay", value: "REPLAY" },
-  { label: "Highlights", value: "HIGHLIGHTS" },
-];
-
-const formattedDate = computed(() =>
-    props.event?.dateTime
-        ? new Date(props.event.dateTime).toLocaleString("en-AU", {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-        })
-        : "-"
-);
-
-function formatEnumToString(value?: string) {
-  if (!value) return "-";
-  return String(value)
-      .toLowerCase()
-      .split("_")
-      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-      .join(" ");
-}
+const { getWatchStatusIcon } = useWatchStatusIcon();
+const { watchStatusOptions } = useWatchStatusOptions();
+const { formatEnumToString, formatDate } = useFormatters();
 
 function emitWatchStatus() {
   emit("update:watchStatus", localWatchStatus.value);
