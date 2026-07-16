@@ -21,5 +21,9 @@ useSeoMeta({
   ogDescription: "Track the sports you’ve watched. Understand your viewing habits. All in one place.",
   ogImage: "/favicon-32x32.png",
   ogUrl: "https://www.trakket.com",
+  twitterCard: "summary_large_image",
+  twitterTitle: "Trakket - Track the sports you watch",
+  twitterDescription: "Track the sports you’ve watched. Understand your viewing habits. All in one place.",
+  twitterImage: "/favicon-32x32.png",
 })
 </script>

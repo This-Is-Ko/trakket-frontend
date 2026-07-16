@@ -13,14 +13,6 @@
         <ul class="grid grid-cols-2 gap-x-6 gap-y-2 text-sm leading-6">
           <li>
             <NuxtLink
-                to="/signup"
-                class="block text-gray-300 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded"
-            >
-              Sign Up
-            </NuxtLink>
-          </li>
-          <li>
-            <NuxtLink
                 to="/login"
                 class="block text-gray-300 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded"
             >

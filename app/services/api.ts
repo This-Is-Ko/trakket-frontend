@@ -20,7 +20,7 @@ export const createApi = () => {
                     const userStore = useUserStore();
                     await userStore.logout();
                 } else if (status === 403) {
-                    alert("You do not have permission to perform this action.");
+                    console.error("Permission denied (403)");
                 }
             }
             return Promise.reject(error);

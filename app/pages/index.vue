@@ -22,7 +22,7 @@
           <Button
               label="Get Started"
               as="router-link"
-              :to="userStore.isLoggedIn ? '/football' : '/signup'"
+              :to="userStore.isLoggedIn ? '/football' : '/login'"
               rounded
               class="!px-6 !py-3 !text-lg bg-indigo-600 text-white hover:bg-indigo-700"
           />
