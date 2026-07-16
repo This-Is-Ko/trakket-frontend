@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import {createApi} from "~/services/api";
+import { createApi } from "~/services/api";
 
 export const useUserStore = defineStore('user', {
     state: () => ({
@@ -15,7 +15,7 @@ export const useUserStore = defineStore('user', {
                     email,
                     password,
                 });
-                this.username = res.data.username ?? null;
+                this.username = res.data.name ?? null;
                 this.isLoggedIn = true;
             } catch (err: any) {
                 this.username = null;
@@ -23,19 +23,31 @@ export const useUserStore = defineStore('user', {
                 throw new Error(err.response?.data?.message || "Login failed");
             }
         },
+        async googleLogin(idToken: string) {
+            const api = createApi();
+            try {
+                const res = await api.post("/api/auth/google", {
+                    idToken,
+                });
+                this.username = res.data.name ?? null;
+                this.isLoggedIn = true;
+            } catch (err: any) {
+                this.username = null;
+                this.isLoggedIn = false;
+                throw new Error(err.response?.data?.message || "Google login failed");
+            }
+        },
         async checkAuth() {
             const api = createApi();
             try {
                 const res = await api.get("/api/auth/me");
-                this.username = res.data.username ?? null;
+                this.username = res.data.name ?? null;
                 this.isLoggedIn = true;
             } catch (err: any) {
                 if (err.response && err.response.status === 401) {
-                    // user is not logged in
                     this.username = null;
                     this.isLoggedIn = false;
                 } else {
-                    // network/server error - keep previous state
                     console.warn("Auth check failed due to network/server error", err);
                 }
                 return false;
