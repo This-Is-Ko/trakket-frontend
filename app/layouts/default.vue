@@ -1,10 +1,10 @@
 <template>
-  <div class="bg-gray-100 min-h-screen flex flex-col">
+  <div class="p-dark min-h-screen bg-gray-950 text-gray-100">
     <Navbar />
 
     <main
       :class="[
-        'w-full max-w-7xl mx-auto flex-1 flex flex-col gap-6',
+        'w-full max-w-[1600px] mx-auto flex-1 flex flex-col gap-6',
         route.path !== '/' && route.path !== '/about' ? 'px-1 sm:px-6 py-6' : ''
       ]"
     >
@@ -29,6 +29,10 @@
     </ClientOnly>
 
     <Footer />
+
+    <ClientOnly>
+      <CookieConsent />
+    </ClientOnly>
   </div>
 </template>
 
@@ -40,6 +44,7 @@ import { useRoute, useRouter } from "vue-router";
 const router = useRouter();
 const route = useRoute();
 
+import CookieConsent from "~/components/CookieConsent.vue";
 import {useUserStore} from "~/stores/useUserStore";
 const userStore = useUserStore()
 

@@ -1,66 +1,102 @@
 <template>
-  <div class="w-full bg-white shadow">
-    <div class="max-w-7xl mx-auto px-6">
-      <Menubar :model="menuItems" class="w-full">
-
-        <!-- Menu Item Slot -->
-        <template #item="{ item, props, hasSubmenu }">
-          <NuxtLink
-              :to="item.to"
-              class="p-menuitem-link flex items-center"
-              v-bind="props.action"
-              :class="{ 'active-link': isActive(item) }"
+  <div class="w-full border-b border-white/5 bg-gray-950/80 backdrop-blur-sm sticky top-0 z-50">
+    <div class="max-w-[1600px] mx-auto px-6 lg:px-12 h-16 flex items-center justify-between">
+      <!-- Left: Logo + Navigation -->
+      <div class="flex items-center gap-8">
+        <!-- Logo -->
+        <NuxtLink to="/" class="flex items-center gap-2 group">
+          <div
+            class="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-extrabold text-white"
+            style="background: var(--p-button-primary-background)"
           >
-            <span>{{ item.label }}</span>
-            <span v-if="hasSubmenu" class="pi pi-angle-down ml-1 text-sm"></span>
+            T
+          </div>
+          <span class="text-lg font-bold text-white tracking-tight">TRAKKET</span>
+        </NuxtLink>
+
+        <!-- Navigation links -->
+        <nav class="hidden md:flex items-center gap-1">
+          <NuxtLink
+            v-for="item in navItems"
+            :key="item.to"
+            :to="item.to"
+            class="px-3 py-1.5 text-sm font-medium rounded-full transition-colors duration-200"
+            :class="navClass(item.to)"
+          >
+            {{ item.label }}
+          </NuxtLink>
+
+          <!-- Statistics dropdown -->
+          <div class="relative">
+            <button
+              @click="toggleStatsMenu"
+              class="px-3 py-1.5 text-sm font-medium rounded-full transition-colors duration-200 flex items-center gap-1"
+              :class="navClass('/statistics')"
+            >
+              Statistics
+              <i class="pi pi-chevron-down text-xs"></i>
+            </button>
+            <Menu ref="statsMenu" :model="statsItems" popup />
+          </div>
+        </nav>
+      </div>
+
+      <!-- Right: Auth actions -->
+      <div class="flex items-center gap-3">
+        <template v-if="userStore.isLoggedIn">
+          <span class="text-sm text-gray-300 hidden sm:inline">
+            Hi {{ userStore.username || 'there' }}
+          </span>
+          <Menu ref="menu" :model="userMenu" popup />
+          <Button
+            icon="pi pi-user"
+            text
+            @click="toggleMenu"
+            class="!text-gray-400 hover:!text-white"
+          />
+        </template>
+        <template v-else>
+          <NuxtLink
+            to="/login"
+            class="text-sm font-medium text-gray-300 hover:text-white transition-colors duration-200 px-4 py-2 rounded-full border border-white/10 hover:border-white/25 hover:bg-white/5"
+          >
+            Login
           </NuxtLink>
         </template>
-
-        <!-- Right side (auth actions) -->
-        <template #end>
-          <div v-if="userStore.isLoggedIn">
-            <Menu ref="menu" :model="userMenu" popup />
-            <Button icon="pi pi-user" text @click="toggleMenu" />
-          </div>
-          <div v-else>
-            <NuxtLink to="/login">
-              <Button label="Login" icon="pi pi-sign-in" text />
-            </NuxtLink>
-          </div>
-        </template>
-
-      </Menubar>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useUserStore } from "~/stores/useUserStore.js";
 
-const router = useRouter();
 const route = useRoute();
+const router = useRouter();
 const userStore = useUserStore();
 
 const menu = ref(null);
+const statsMenu = ref(null);
 
 const toggleMenu = (event) => {
   menu.value.toggle(event);
 };
 
-const menuItems = [
-  { label: "Home", to: "/" },
+const toggleStatsMenu = (event) => {
+  statsMenu.value.toggle(event);
+};
+
+const navItems = [
   { label: "Football", to: "/football" },
   { label: "Motorsport", to: "/motorsport" },
-  {
-    label: "Statistics",
-    items: [
-      { label: "Overall", to: "/statistics" },
-      { label: "Football", to: "/statistics/football" },
-      { label: "Motorsport", to: "/statistics/motorsport" }
-    ]
-  }
+];
+
+const statsItems = [
+  { label: "All", to: "/statistics" },
+  { label: "Football", to: "/statistics/football" },
+  { label: "Motorsport", to: "/statistics/motorsport" },
 ];
 
 const toast = useToast();
@@ -71,32 +107,20 @@ const userMenu = [
     icon: "pi pi-sign-out",
     command: async () => {
       await userStore.logout();
+      await router.push("/");
       toast.add({
         severity: "success",
         summary: "Logged out",
         life: 3000,
       });
-      await router.push("/login");
     }
   }
 ];
 
-// Active link helper
-const isActive = (item) => {
-  if (item.to) return route.path === item.to;
-  if (item.items) return item.items.some(child => child.to === route.path);
-  return false;
+const navClass = (path) => {
+  const active = path === '/' ? route.path === path : route.path.startsWith(path);
+  return active
+    ? 'text-white bg-white/10'
+    : 'text-gray-400 hover:text-white hover:bg-white/5';
 };
 </script>
-
-<style scoped>
-.active-link {
-  font-weight: bold;
-  color: var(--primary-500);
-}
-:deep(.p-menubar) {
-  border: none;
-  background: transparent;
-  box-shadow: none;
-}
-</style>

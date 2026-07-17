@@ -1,39 +1,49 @@
 <template>
-  <div class="flex flex-col justify-center items-center bg-gray-100 px-4"
+  <div class="flex flex-col justify-center items-center px-4 bg-gray-950 text-gray-100"
        :style="{ minHeight: 'calc(100vh - 64px)' }">
-    <h2 class="text-3xl font-bold mb-6 text-center">Login</h2>
-
-    <div ref="googleButtonRef" class="mb-4 flex justify-center min-h-[48px]"></div>
-
-    <div class="flex items-center w-full max-w-sm my-2">
-      <div class="flex-1 border-t border-gray-300"></div>
-      <span class="px-3 text-sm text-gray-500">or</span>
-      <div class="flex-1 border-t border-gray-300"></div>
+    <!-- Subtle background glow -->
+    <div class="absolute inset-0 pointer-events-none overflow-hidden">
+      <div
+        class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full opacity-[0.06]"
+        style="background: radial-gradient(circle, var(--p-button-primary-background), transparent 70%)"
+      ></div>
     </div>
 
-    <form @submit.prevent="onLogin" class="w-full max-w-sm flex flex-col gap-4">
-      <InputText
-          v-model="email"
-          placeholder="Email"
-          class="w-full"
-          :class="{'!border-red-500': showErrors && (!email)}"
-      />
-      <Password
-          v-model="password"
-          placeholder="Password"
-          toggleMask
-          :feedback="false"
-          class="w-full"
-          :inputClass="['w-full', showErrors && !password ? '!border-red-500 focus:!ring-red-500 focus:!border-red-500' : '']"
-      />
+    <div class="relative z-10 w-full max-w-sm">
+      <h2 class="text-3xl font-extrabold tracking-tight text-center mb-8 text-white">Login</h2>
 
-      <Button
-          type="submit"
-          label="Login"
-          class="w-full"
-          :loading="loading"
-      />
-    </form>
+      <div ref="googleButtonRef" class="mb-4 flex justify-center min-h-[48px]"></div>
+
+      <div class="flex items-center w-full my-4">
+        <div class="flex-1 border-t border-white/10"></div>
+        <span class="px-3 text-sm text-gray-500">or</span>
+        <div class="flex-1 border-t border-white/10"></div>
+      </div>
+
+      <form @submit.prevent="onLogin" class="w-full flex flex-col gap-4">
+        <InputText
+            v-model="email"
+            placeholder="Email"
+            class="w-full"
+            :class="{'!border-red-500': showErrors && (!email)}"
+        />
+        <Password
+            v-model="password"
+            placeholder="Password"
+            toggleMask
+            :feedback="false"
+            class="w-full"
+            :inputClass="['w-full', showErrors && !password ? '!border-red-500 focus:!ring-red-500 focus:!border-red-500' : '']"
+        />
+
+        <Button
+            type="submit"
+            label="Login"
+            class="w-full !font-semibold"
+            :loading="loading"
+        />
+      </form>
+    </div>
   </div>
 </template>
 
@@ -117,7 +127,7 @@ async function handleGoogleLogin(idToken: string) {
       detail: "You have logged in successfully.",
       life: 4000,
     });
-    await router.push("/");
+    await router.push("/football");
   } catch (err: any) {
     showError(err.message || "Google login failed. Please try again.");
   } finally {
@@ -147,7 +157,7 @@ async function onLogin() {
       detail: "You have logged in successfully.",
       life: 4000,
     });
-    await router.push("/");
+    await router.push("/football");
   } catch (err) {
     showError("Login failed. Please check your credentials.");
   } finally {

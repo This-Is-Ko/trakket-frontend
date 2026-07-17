@@ -24,12 +24,23 @@
                   v-for="comp in competitions"
                   :key="comp.displayName"
                   @click="competitionFilter = comp"
-                  class="cursor-pointer px-3 py-2 rounded-md"
+                  class="cursor-pointer px-3 py-2 rounded-md flex items-center gap-2 transition-colors duration-200"
                   :class="{
-                    'bg-blue-100 font-semibold': competitionFilter?.displayName === comp.displayName,
-                    'hover:bg-gray-100': competitionFilter?.displayName !== comp.displayName
+                    'font-semibold text-white': competitionFilter?.displayName === comp.displayName,
+                    'text-gray-400 hover:text-white hover:bg-white/5': competitionFilter?.displayName !== comp.displayName
                   }"
+                  :style="competitionFilter?.displayName === comp.displayName ? { background: 'var(--p-button-primary-background)' } : {}"
               >
+                <div
+                    v-if="!comp.logoUrl"
+                    class="w-6 h-6 bg-gray-300 rounded-full flex-shrink-0"
+                ></div>
+                <Image
+                    v-else
+                    :src="comp.logoUrl"
+                    alt="Championship logo"
+                    width="22"
+                />
                 {{ comp.displayName }}
               </li>
             </ul>
