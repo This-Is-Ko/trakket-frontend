@@ -15,7 +15,7 @@ export const useUserStore = defineStore('user', {
                     email,
                     password,
                 });
-                this.username = res.data.name ?? null;
+                this.username = res.data.username ?? null;
                 this.isLoggedIn = true;
             } catch (err: any) {
                 this.username = null;
@@ -29,7 +29,7 @@ export const useUserStore = defineStore('user', {
                 const res = await api.post("/api/auth/google", {
                     idToken,
                 });
-                this.username = res.data.name ?? null;
+                this.username = res.data.username ?? null;
                 this.isLoggedIn = true;
             } catch (err: any) {
                 this.username = null;
@@ -41,7 +41,7 @@ export const useUserStore = defineStore('user', {
             const api = createApi();
             try {
                 const res = await api.get("/api/auth/me");
-                this.username = res.data.name ?? null;
+                this.username = res.data.username ?? null;
                 this.isLoggedIn = true;
             } catch (err: any) {
                 if (err.response && err.response.status === 401) {

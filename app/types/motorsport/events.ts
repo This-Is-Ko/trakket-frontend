@@ -23,4 +23,5 @@ export interface MotorsportEventWrapper {
 
 export interface MotorsportCompetition {
     displayName: string;
+    logoUrl?: string | null;
 }
