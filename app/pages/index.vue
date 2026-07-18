@@ -100,6 +100,7 @@
     <!-- Example event cards strip below hero (medium screens only) -->
     <LandingHeroEventCards
       mode="strip"
+      class="-mt-48 mb-8"
       :football-events="footballPreviewEvents"
       :motorsport-events="motorsportPreviewEvents"
     />
