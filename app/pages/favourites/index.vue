@@ -12,9 +12,10 @@
         <label class="block text-xs text-gray-500 mb-1">Sport</label>
         <Select
           v-model="sportFilter"
-          :options="SPORT_OPTIONS"
+          :options="sportOptions"
           option-label="label"
           option-value="value"
+          placeholder="All sports"
           class="w-full"
           @change="onFilterChange"
         />
@@ -39,7 +40,7 @@
               <div class="flex items-center gap-2">
                 <i
                   v-if="option.value?.sport === 'football'"
-                  class="pi pi-futbol text-xs text-gray-500"
+                  class="pi pi-trophy text-xs text-gray-500"
                 ></i>
                 <i
                   v-else-if="option.value?.sport === 'motorsport'"
@@ -210,13 +211,27 @@ import { useUserStore } from '~/stores/useUserStore'
 import { useFavouriteStore } from '~/stores/useFavouriteStore'
 import axios from 'axios'
 
-// ---- Constants ----
+// ---- Computed - Script order ---
 
-const SPORT_OPTIONS = [
-  { label: 'All sports', value: null },
-  { label: 'Football', value: 'football' },
-  { label: 'Motorsport', value: 'motorsport' },
-]
+/** Sport options scoped to the user's favourites. Mirrors `teamOptions`. */
+const sportOptions = computed(() => {
+  const options: { label: string; value: string | null }[] = [
+    { label: 'All sports', value: null },
+  ]
+
+  if (
+    favouriteStore.footballCompetitions.length > 0 ||
+    favouriteStore.footballTeams.length > 0
+  ) {
+    options.push({ label: 'Football', value: 'football' })
+  }
+
+  if (favouriteStore.motorsportCompetitions.length > 0) {
+    options.push({ label: 'Motorsport', value: 'motorsport' })
+  }
+
+  return options
+})
 
 const EVENT_STATUS_OPTIONS = [
   { label: 'All statuses', value: null },

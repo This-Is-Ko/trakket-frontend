@@ -4,7 +4,7 @@
 @custom-variant dark (&:where(.p-dark, .p-dark *));
 
 .bg-page-gradient {
-    background: linear-gradient(to bottom, #4b5563 0%, #14181c 150px, #14181c 100%);
+    background: #14181c;
 }
 
 :root {

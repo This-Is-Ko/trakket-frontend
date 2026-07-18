@@ -96,7 +96,7 @@ const navItems = [
 
 const statsItems = [
   { label: "All", icon: "pi pi-chart-bar", command: () => router.push("/statistics") },
-  { label: "Football", icon: "pi pi-fw pi-futbol", command: () => router.push("/statistics/football") },
+  { label: "Football", icon: "pi pi-fw pi-trophy", command: () => router.push("/statistics/football") },
   { label: "Motorsport", icon: "pi pi-fw pi-flag", command: () => router.push("/statistics/motorsport") },
 ];
 
