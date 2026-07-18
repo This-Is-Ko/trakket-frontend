@@ -55,8 +55,7 @@
       <div class="hidden 2xl:block">
         <LandingHeroEventCards
           mode="surround"
-          :football-events="footballPreviewEvents"
-          :motorsport-events="motorsportPreviewEvents"
+          :events="previewEvents"
         />
       </div>
 
@@ -101,8 +100,7 @@
     <LandingHeroEventCards
       mode="strip"
       class="-mt-24 mb-8"
-      :football-events="footballPreviewEvents"
-      :motorsport-events="motorsportPreviewEvents"
+      :events="previewEvents"
     />
 
     <!-- Footer -->
@@ -134,8 +132,7 @@ import { useLandingPreviewEvents } from '~/composables/useLandingPreviewEvents'
 
 const userStore = useUserStore()
 
-const { footballEvents: footballPreviewEvents, motorsportEvents: motorsportPreviewEvents } =
-  useLandingPreviewEvents()
+const { events: previewEvents } = useLandingPreviewEvents()
 
 definePageMeta({
   public: true,

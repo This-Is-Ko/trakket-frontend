@@ -5,7 +5,7 @@
     <main
       :class="[
         'w-full max-w-[1600px] mx-auto flex-1 flex flex-col gap-6',
-        route.path !== '/' && route.path !== '/about' ? 'px-1 sm:px-6 py-6' : ''
+        route.path !== '/' && route.path !== '/about' && route.path !== '/privacy-policy' ? 'px-1 sm:px-6 py-6' : ''
       ]"
     >
       <slot />
@@ -46,6 +46,7 @@ const route = useRoute();
 
 import CookieConsent from "~/components/CookieConsent.vue";
 import {useUserStore} from "~/stores/useUserStore";
+
 const userStore = useUserStore()
 
 const redirectToLogin = async () => {
