@@ -10,6 +10,21 @@ export interface FetchEventsParams {
     ascending: boolean;
 }
 
+export async function fetchMotorsportEvents(params: FetchEventsParams) {
+    const api = createApi();
+    const res = await api.get("/api/motorsport/events", {
+        params,
+    });
+    const data = res.data ?? {};
+    return {
+        events: data.events ?? [],
+        pageNumber: data.pageNumber ?? 0,
+        pageSize: data.pageSize ?? params.pageSize,
+        totalElements: data.totalElements ?? 0,
+        last: data.last ?? false,
+    };
+}
+
 export async function fetchMotorsportEventsWithStatus(params: FetchEventsParams) {
     const api = createApi();
     const res = await api.get("/api/motorsport/events/with-status", {

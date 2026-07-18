@@ -6,6 +6,7 @@ export default defineNuxtConfig({
         head: {
             htmlAttrs: {
                 lang: 'en',
+                class: 'p-dark',
             },
             link: [
                 { rel: 'icon', href: '/favicon.ico' },
@@ -28,15 +29,23 @@ export default defineNuxtConfig({
         // Public
         '/': { prerender: true },
         '/about': { prerender: true },
+        '/privacy-policy': { prerender: true },
 
         // Auth related
         '/login': { ssr: true },
-        '/signup': { ssr: true },
+        '/signup': { redirect: '/login' },
 
         // Private
         '/football/**': { ssr: false },
         '/motorsport/**': { ssr: false },
+        '/favourites/**': { ssr: false },
         '/statistics/**': { ssr: false },
+    },
+    sitemap: {
+        autoLastmod: true,
+    },
+    robots: {
+        enabled: true,
     },
     compatibilityDate: '2025-07-15',
     devtools: { enabled: false },

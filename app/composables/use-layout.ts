@@ -4,7 +4,6 @@ import { computed, ref } from "vue";
 const appState = ref({
     primary: "emerald",
     surface: "zinc",
-    darkMode: false
 });
 
 const primaryColors = ref([
@@ -89,11 +88,6 @@ export function useLayout() {
         appState.value.surface = value;
     }
 
-    function toggleDarkMode(): void {
-        appState.value.darkMode = !appState.value.darkMode;
-        document.documentElement.classList.toggle("p-dark");
-    }
-
     function updateColors(type: "primary" | "surface", colorName: string): void {
         if (type === "primary") {
             setPrimary(colorName);
@@ -106,17 +100,14 @@ export function useLayout() {
         }
     }
 
-    const isDarkMode = computed<boolean>(() => appState.value.darkMode);
     const primary = computed<string>(() => appState.value.primary);
     const surface = computed<string | null>(() => appState.value.surface);
 
     return {
         primaryColors,
         surfaces,
-        isDarkMode,
         primary,
         surface,
-        toggleDarkMode,
         setPrimary,
         setSurface,
         updateColors,
