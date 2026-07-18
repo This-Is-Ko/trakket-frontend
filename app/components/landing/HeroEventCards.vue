@@ -1,67 +1,96 @@
 <template>
-  <div class="hero-cards-container hidden lg:block">
-    <div class="cards-inner">
+  <div class="hero-cards-container" :class="mode === 'surround' ? 'hidden 2xl:block' : 'hidden lg:block 2xl:hidden'">
+    <!-- Surround mode: absolute-positioned cards flanking the hero -->
+    <template v-if="mode === 'surround'">
       <div v-if="footballEvents[0]" class="card-slot pos-left-top">
-        <CompactFootballCard
-          :event="footballEvents[0].details"
-          :watch-status="footballEvents[0].status"
-          :display-only="true"
-        />
+        <CompactFootballCard :event="footballEvents[0].details" :watch-status="footballEvents[0].status" :display-only="true" />
       </div>
       <div v-if="motorsportEvents[0]" class="card-slot pos-left-mid-up">
-        <CompactMotorsportCard
-          :event="motorsportEvents[0].details"
-          :watch-status="motorsportEvents[0].status"
-          :display-only="true"
-        />
+        <CompactMotorsportCard :event="motorsportEvents[0].details" :watch-status="motorsportEvents[0].status" :display-only="true" />
       </div>
       <div v-if="footballEvents[1]" class="card-slot pos-left-mid-down">
-        <CompactFootballCard
-          :event="footballEvents[1].details"
-          :watch-status="footballEvents[1].status"
-          :display-only="true"
-        />
+        <CompactFootballCard :event="footballEvents[1].details" :watch-status="footballEvents[1].status" :display-only="true" />
       </div>
       <div v-if="motorsportEvents[1]" class="card-slot pos-left-bot">
-        <CompactMotorsportCard
-          :event="motorsportEvents[1].details"
-          :watch-status="motorsportEvents[1].status"
-          :display-only="true"
-        />
+        <CompactMotorsportCard :event="motorsportEvents[1].details" :watch-status="motorsportEvents[1].status" :display-only="true" />
       </div>
       <div v-if="motorsportEvents[2]" class="card-slot pos-right-top">
-        <CompactMotorsportCard
-          :event="motorsportEvents[2].details"
-          :watch-status="motorsportEvents[2].status"
-          :display-only="true"
-        />
+        <CompactMotorsportCard :event="motorsportEvents[2].details" :watch-status="motorsportEvents[2].status" :display-only="true" />
       </div>
       <div v-if="footballEvents[2]" class="card-slot pos-right-mid-up">
-        <CompactFootballCard
-          :event="footballEvents[2].details"
-          :watch-status="footballEvents[2].status"
-          :display-only="true"
-        />
+        <CompactFootballCard :event="footballEvents[2].details" :watch-status="footballEvents[2].status" :display-only="true" />
       </div>
       <div v-if="motorsportEvents[3]" class="card-slot pos-right-mid-down">
-        <CompactMotorsportCard
-          :event="motorsportEvents[3].details"
-          :watch-status="motorsportEvents[3].status"
-          :display-only="true"
-        />
+        <CompactMotorsportCard :event="motorsportEvents[3].details" :watch-status="motorsportEvents[3].status" :display-only="true" />
       </div>
       <div v-if="footballEvents[3]" class="card-slot pos-right-bot">
-        <CompactFootballCard
-          :event="footballEvents[3].details"
-          :watch-status="footballEvents[3].status"
-          :display-only="true"
-        />
+        <CompactFootballCard :event="footballEvents[3].details" :watch-status="footballEvents[3].status" :display-only="true" />
       </div>
-    </div>
+    </template>
+
+    <!-- Strip mode: horizontal auto-scrolling marquee -->
+    <template v-else>
+      <div ref="stripRef" class="strip-track" @mouseenter="pauseScroll" @mouseleave="resumeScroll">
+        <div class="strip-group">
+          <div v-if="footballEvents[0]" class="card-slot">
+            <CompactFootballCard :event="footballEvents[0].details" :watch-status="footballEvents[0].status" :display-only="true" />
+          </div>
+          <div v-if="motorsportEvents[0]" class="card-slot">
+            <CompactMotorsportCard :event="motorsportEvents[0].details" :watch-status="motorsportEvents[0].status" :display-only="true" />
+          </div>
+          <div v-if="footballEvents[1]" class="card-slot">
+            <CompactFootballCard :event="footballEvents[1].details" :watch-status="footballEvents[1].status" :display-only="true" />
+          </div>
+          <div v-if="motorsportEvents[1]" class="card-slot">
+            <CompactMotorsportCard :event="motorsportEvents[1].details" :watch-status="motorsportEvents[1].status" :display-only="true" />
+          </div>
+          <div v-if="motorsportEvents[2]" class="card-slot">
+            <CompactMotorsportCard :event="motorsportEvents[2].details" :watch-status="motorsportEvents[2].status" :display-only="true" />
+          </div>
+          <div v-if="footballEvents[2]" class="card-slot">
+            <CompactFootballCard :event="footballEvents[2].details" :watch-status="footballEvents[2].status" :display-only="true" />
+          </div>
+          <div v-if="motorsportEvents[3]" class="card-slot">
+            <CompactMotorsportCard :event="motorsportEvents[3].details" :watch-status="motorsportEvents[3].status" :display-only="true" />
+          </div>
+          <div v-if="footballEvents[3]" class="card-slot">
+            <CompactFootballCard :event="footballEvents[3].details" :watch-status="footballEvents[3].status" :display-only="true" />
+          </div>
+        </div>
+        <!-- Duplicate group for seamless loop -->
+        <div class="strip-group" aria-hidden="true">
+          <div v-if="footballEvents[0]" class="card-slot">
+            <CompactFootballCard :event="footballEvents[0].details" :watch-status="footballEvents[0].status" :display-only="true" />
+          </div>
+          <div v-if="motorsportEvents[0]" class="card-slot">
+            <CompactMotorsportCard :event="motorsportEvents[0].details" :watch-status="motorsportEvents[0].status" :display-only="true" />
+          </div>
+          <div v-if="footballEvents[1]" class="card-slot">
+            <CompactFootballCard :event="footballEvents[1].details" :watch-status="footballEvents[1].status" :display-only="true" />
+          </div>
+          <div v-if="motorsportEvents[1]" class="card-slot">
+            <CompactMotorsportCard :event="motorsportEvents[1].details" :watch-status="motorsportEvents[1].status" :display-only="true" />
+          </div>
+          <div v-if="motorsportEvents[2]" class="card-slot">
+            <CompactMotorsportCard :event="motorsportEvents[2].details" :watch-status="motorsportEvents[2].status" :display-only="true" />
+          </div>
+          <div v-if="footballEvents[2]" class="card-slot">
+            <CompactFootballCard :event="footballEvents[2].details" :watch-status="footballEvents[2].status" :display-only="true" />
+          </div>
+          <div v-if="motorsportEvents[3]" class="card-slot">
+            <CompactMotorsportCard :event="motorsportEvents[3].details" :watch-status="motorsportEvents[3].status" :display-only="true" />
+          </div>
+          <div v-if="footballEvents[3]" class="card-slot">
+            <CompactFootballCard :event="footballEvents[3].details" :watch-status="footballEvents[3].status" :display-only="true" />
+          </div>
+        </div>
+      </div>
+    </template>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import CompactFootballCard from '~/components/event/CompactFootballCard.vue'
 import CompactMotorsportCard from '~/components/event/CompactMotorsportCard.vue'
 import type { FootballEventWrapper } from '~/types/football/events'
@@ -70,73 +99,78 @@ import type { MotorsportEventWrapper } from '~/types/motorsport/events'
 defineProps<{
   footballEvents: FootballEventWrapper[]
   motorsportEvents: MotorsportEventWrapper[]
+  mode: 'surround' | 'strip'
 }>()
+
+// ---- Auto-scroll logic (strip mode only) ----
+const stripRef = ref<HTMLElement | null>(null)
+let scrollRAF = 0
+let paused = false
+
+function stepScroll() {
+  if (!stripRef.value || paused) return
+  const el = stripRef.value
+  el.scrollLeft += 0.8
+  // When we've scrolled past the first group, snap back
+  if (el.scrollLeft >= el.scrollWidth / 2) {
+    el.scrollLeft = 0
+  }
+  scrollRAF = requestAnimationFrame(stepScroll)
+}
+
+function pauseScroll() { paused = true }
+function resumeScroll() { paused = false }
+
+onMounted(() => {
+  scrollRAF = requestAnimationFrame(stepScroll)
+})
+onBeforeUnmount(() => {
+  cancelAnimationFrame(scrollRAF)
+})
 </script>
 
 <style scoped>
 /* ====================================================
-   Medium screens (1024px–1439px): horizontal scroll
-   strip anchored near the bottom of the hero section
+   Surround mode — absolute-positioned cards
    ==================================================== */
-.hero-cards-container {
-  position: absolute;
-  bottom: 10%;
-  left: 0;
-  right: 0;
-  overflow-x: auto;
-  pointer-events: auto;
-  z-index: 5;
+.card-slot {
+  opacity: 0.75;
+}
+
+/* surround mode positions */
+.pos-left-top       { position: absolute; left: 28%;  top: 10%;  animation: fadeInVert 0.8s 0.1s ease forwards; }
+.pos-left-mid-up    { position: absolute; left: 22%;  top: 31%;  animation: fadeInLeftBulge 0.8s 0.2s ease forwards; }
+.pos-left-mid-down  { position: absolute; left: 22%;  top: 52%;  animation: fadeInLeftBulge 0.8s 0.3s ease forwards; }
+.pos-left-bot       { position: absolute; left: 28%;  top: 73%;  animation: fadeInVert 0.8s 0.4s ease forwards; }
+.pos-right-top      { position: absolute; right: 28%; top: 10%;  animation: fadeInVert 0.8s 0.5s ease forwards; }
+.pos-right-mid-up   { position: absolute; right: 22%; top: 31%;  animation: fadeInRightBulge 0.8s 0.6s ease forwards; }
+.pos-right-mid-down { position: absolute; right: 22%; top: 52%;  animation: fadeInRightBulge 0.8s 0.7s ease forwards; }
+.pos-right-bot      { position: absolute; right: 28%; top: 73%;  animation: fadeInVert 0.8s 0.8s ease forwards; }
+
+/* ====================================================
+   Strip mode — horizontal auto-scrolling marquee
+   ==================================================== */
+.strip-track {
+  display: flex;
+  overflow-x: hidden;
   scrollbar-width: none;
 }
-.hero-cards-container::-webkit-scrollbar { display: none; }
+.strip-track::-webkit-scrollbar { display: none; }
 
-.cards-inner {
+.strip-group {
   display: flex;
   gap: 14px;
-  padding: 0 max(24px, calc((100vw - 960px) / 2));
+  flex-shrink: 0;
 }
 
-.card-slot {
+.strip-group .card-slot {
   width: 300px;
   flex-shrink: 0;
-  opacity: 0.75;
-  animation: fadeInVert 0.6s ease forwards;
 }
 
 /* ====================================================
-   Wide screens (1440px+): 8-card surround layout
+   Keyframes
    ==================================================== */
-@media (min-width: 1440px) {
-  .hero-cards-container {
-    position: absolute;
-    inset: 0;
-    overflow: visible;
-    pointer-events: none;
-  }
-
-  .cards-inner {
-    display: block;
-    padding: 0;
-  }
-
-  .card-slot {
-    position: absolute;
-    width: 300px;
-    flex-shrink: initial;
-    pointer-events: auto;
-  }
-
-  .pos-left-top       { left: 28%;  top: 10%;  animation: fadeInVert 0.8s 0.1s ease forwards; }
-  .pos-left-mid-up    { left: 22%;  top: 31%;  animation: fadeInLeftBulge 0.8s 0.2s ease forwards; }
-  .pos-left-mid-down  { left: 22%;  top: 52%;  animation: fadeInLeftBulge 0.8s 0.3s ease forwards; }
-  .pos-left-bot       { left: 28%;  top: 73%;  animation: fadeInVert 0.8s 0.4s ease forwards; }
-  .pos-right-top      { right: 28%; top: 10%;  animation: fadeInVert 0.8s 0.5s ease forwards; }
-  .pos-right-mid-up   { right: 22%; top: 31%;  animation: fadeInRightBulge 0.8s 0.6s ease forwards; }
-  .pos-right-mid-down { right: 22%; top: 52%;  animation: fadeInRightBulge 0.8s 0.7s ease forwards; }
-  .pos-right-bot      { right: 28%; top: 73%;  animation: fadeInVert 0.8s 0.8s ease forwards; }
-}
-
-/* Keyframes */
 @keyframes fadeInVert {
   from { opacity: 0; transform: translateY(12px) scale(0.96); }
   to   { opacity: 0.75; transform: translateY(0) scale(1); }

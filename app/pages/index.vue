@@ -51,11 +51,14 @@
         ></div>
       </div>
 
-      <!-- Example event cards around the hero -->
-      <LandingHeroEventCards
-        :football-events="footballPreviewEvents"
-        :motorsport-events="motorsportPreviewEvents"
-      />
+      <!-- Example event cards around the hero (wide screens only) -->
+      <div class="hidden 2xl:block">
+        <LandingHeroEventCards
+          mode="surround"
+          :football-events="footballPreviewEvents"
+          :motorsport-events="motorsportPreviewEvents"
+        />
+      </div>
 
       <div class="relative z-10 flex flex-col items-center text-center max-w-xl lg:max-w-2xl">
         <!-- Main Headline -->
@@ -93,6 +96,13 @@
         </ClientOnly>
       </div>
     </div>
+
+    <!-- Example event cards strip below hero (medium screens only) -->
+    <LandingHeroEventCards
+      mode="strip"
+      :football-events="footballPreviewEvents"
+      :motorsport-events="motorsportPreviewEvents"
+    />
 
     <!-- Footer -->
     <footer class="relative z-10 border-t border-white/5 py-8 px-6">
