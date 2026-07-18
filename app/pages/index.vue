@@ -8,17 +8,21 @@
       ></div>
     </div>
 
+    <!-- Toast for logout message -->
+    <ClientOnly>
+      <Toast position="top-center" />
+    </ClientOnly>
+
     <!-- ===== Header Bar ===== -->
     <header class="absolute top-0 left-0 right-0 z-50">
       <div class="max-w-[1600px] mx-auto px-6 lg:px-12 h-16 flex items-center justify-between">
         <!-- Logo -->
         <NuxtLink to="/" class="flex items-center gap-2 group">
-          <div
-            class="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-extrabold text-white"
-            style="background: var(--p-button-primary-background)"
-          >
-            T
-          </div>
+          <img
+            class="w-8 h-8 object-contain"
+            src="/FullLogo.png"
+            alt="Trakket"
+          />
           <span class="text-lg font-bold text-white tracking-tight">TRAKKET</span>
         </NuxtLink>
 
@@ -107,12 +111,11 @@
     <footer class="relative z-10 border-t border-white/5 py-8 px-6">
       <div class="max-w-[1600px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
         <div class="flex items-center gap-2">
-          <div
-            class="w-6 h-6 rounded flex items-center justify-center text-[10px] font-extrabold text-white"
-            style="background: var(--p-button-primary-background)"
-          >
-            T
-          </div>
+          <img
+            class="w-6 h-6 object-contain"
+            src="/FullLogo.png"
+            alt="Trakket"
+          />
           <span class="text-sm text-gray-500">&copy; {{ new Date().getFullYear() }} Trakket. All rights reserved.</span>
         </div>
         <div class="flex items-center gap-6">
@@ -126,13 +129,31 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useToast } from 'primevue/usetoast'
 import LandingHeroEventCards from '~/components/landing/HeroEventCards.vue'
 import { useUserStore } from '~/stores/useUserStore'
 import { useLandingPreviewEvents } from '~/composables/useLandingPreviewEvents'
 
+const route = useRoute()
+const router = useRouter()
+const toast = useToast()
 const userStore = useUserStore()
 
 const { events: previewEvents } = useLandingPreviewEvents()
+
+onMounted(() => {
+  if (route.query.loggedOut === 'true') {
+    toast.add({
+      severity: 'success',
+      summary: 'Logged out',
+      detail: 'You have been successfully logged out.',
+      life: 4000,
+    })
+    router.replace({ query: {} })
+  }
+})
 
 definePageMeta({
   public: true,

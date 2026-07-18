@@ -5,12 +5,11 @@
       <div class="flex items-center gap-8">
         <!-- Logo -->
         <NuxtLink to="/" class="flex items-center gap-2 group">
-          <div
-            class="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-extrabold text-white"
-            style="background: var(--p-button-primary-background)"
-          >
-            T
-          </div>
+          <img
+            class="w-8 h-8 object-contain"
+            src="/FullLogo.png"
+            alt="Trakket"
+          />
           <span class="text-lg font-bold text-white tracking-tight">TRAKKET</span>
         </NuxtLink>
 
@@ -108,12 +107,7 @@ const userMenu = [
     icon: "pi pi-sign-out",
     command: async () => {
       await userStore.logout();
-      await router.push("/");
-      toast.add({
-        severity: "success",
-        summary: "Logged out",
-        life: 3000,
-      });
+      await router.push("/?loggedOut=true");
     }
   }
 ];

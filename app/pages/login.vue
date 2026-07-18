@@ -10,7 +10,9 @@
     </div>
 
     <div class="relative z-10 w-full max-w-sm">
-      <h2 class="text-3xl font-extrabold tracking-tight text-center mb-8 text-white">Login</h2>
+      <h2 class="text-3xl font-extrabold tracking-tight text-center mb-8 text-white flex items-center justify-center gap-2">
+          Login to Trakket
+        </h2>
 
       <div ref="googleButtonRef" class="mb-4 flex justify-center min-h-[48px]"></div>
 
