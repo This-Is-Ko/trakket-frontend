@@ -1,5 +1,13 @@
 <template>
-  <div class="landing">
+  <div class="landing relative overflow-hidden">
+    <!-- Subtle background glow spanning hero + card strip -->
+    <div class="absolute inset-0 pointer-events-none">
+      <div
+        class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full opacity-[0.08]"
+        style="background: radial-gradient(circle, var(--p-button-primary-background), transparent 70%)"
+      ></div>
+    </div>
+
     <!-- ===== Header Bar ===== -->
     <header class="absolute top-0 left-0 right-0 z-50">
       <div class="max-w-[1600px] mx-auto px-6 lg:px-12 h-16 flex items-center justify-between">
@@ -43,14 +51,6 @@
 
     <!-- ===== Hero Content ===== -->
     <div class="relative min-h-screen flex items-center justify-center px-4 pt-16 pb-12">
-      <!-- Subtle background glow -->
-      <div class="absolute inset-0 pointer-events-none overflow-hidden">
-        <div
-          class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full opacity-[0.08]"
-          style="background: radial-gradient(circle, var(--p-button-primary-background), transparent 70%)"
-        ></div>
-      </div>
-
       <!-- Example event cards around the hero (wide screens only) -->
       <div class="hidden 2xl:block">
         <LandingHeroEventCards
@@ -100,7 +100,7 @@
     <!-- Example event cards strip below hero (medium screens only) -->
     <LandingHeroEventCards
       mode="strip"
-      class="-mt-48 mb-8"
+      class="-mt-24 mb-8"
       :football-events="footballPreviewEvents"
       :motorsport-events="motorsportPreviewEvents"
     />
