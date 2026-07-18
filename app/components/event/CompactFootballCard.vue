@@ -40,6 +40,14 @@
       </div>
     </div>
 
+    <!-- Venue -->
+    <div v-if="event.location" class="text-center -mt-1">
+      <span class="text-[11px] text-gray-500 truncate">{{ event.location }}</span>
+    </div>
+    <div v-else class="text-center -mt-1">
+      <span class="text-[11px] text-gray-500">&nbsp;</span>
+    </div>
+
     <!-- Gameweek below -->
     <div class="text-center -mt-1">
       <span class="text-[11px] text-gray-500">Gameweek {{ event.round ?? '-' }}</span>

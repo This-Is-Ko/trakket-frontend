@@ -150,13 +150,11 @@ const paused = ref(false)
   gap: 14px;
   flex-shrink: 0;
   padding-right: 14px;
-  align-items: stretch;
 }
 
 .strip-group .card-slot {
   width: 300px;
   flex-shrink: 0;
-  display: flex;
 }
 
 @keyframes marquee {
