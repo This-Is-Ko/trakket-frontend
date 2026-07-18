@@ -1,7 +1,7 @@
 <template>
   <div
     :class="[
-      'group relative rounded-2xl overflow-hidden transition-all duration-300 p-4 flex flex-col gap-2',
+      'group relative rounded-2xl overflow-hidden transition-all duration-300 p-4 flex flex-col gap-1.5',
       displayOnly ? 'cursor-default' : 'hover:-translate-y-1 cursor-pointer',
     ]"
     style="background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%); border: 1px solid rgba(255,255,255,0.06);"
@@ -20,7 +20,7 @@
           {{ event.raceName ?? event.title }}
         </span>
       </div>
-      <span class="text-xs flex items-center justify-center gap-1 min-w-0 w-full" :class="event.winner ? 'text-emerald-400' : 'text-gray-500'">
+      <span class="text-xs leading-none flex items-center justify-center gap-1 min-w-0 w-full" :class="event.winner ? 'text-emerald-400' : 'text-gray-500'">
         <i class="pi pi-trophy text-[10px] flex-shrink-0"></i>
         <span class="truncate">Winner: {{ event.winner ?? '\u2014' }}</span>
       </span>

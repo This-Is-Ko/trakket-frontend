@@ -12,31 +12,34 @@
       {{ event.competition.displayName }}
     </span>
 
-    <!-- Teams & Score -->
-    <div class="flex items-center gap-3">
-      <!-- Home: logo + name, pushed toward score -->
-      <div class="flex-1 flex items-center justify-end gap-2 min-w-0">
-        <span class="text-sm font-semibold text-white truncate">{{ event.homeTeamName }}</span>
-        <div v-if="!event.homeTeamLogoUrl" class="w-6 h-6 rounded-full bg-gray-700 flex-shrink-0"></div>
-        <Image v-else :src="event.homeTeamLogoUrl" alt="Home" width="22" />
+    <!-- Teams & Score (grouped to match motorsport race identity height) -->
+    <div class="flex flex-col items-center gap-0.5">
+      <!-- Teams: names outward from center, logos inward -->
+      <div class="flex items-center justify-center gap-3 w-full">
+        <!-- Home: name right-aligned, then logo -->
+        <div class="flex-1 flex items-center justify-end gap-2 min-w-0">
+          <span class="text-sm font-semibold text-white truncate">{{ event.homeTeamName }}</span>
+          <div v-if="!event.homeTeamLogoUrl" class="w-5 h-5 rounded-full bg-gray-700 flex-shrink-0"></div>
+          <Image v-else :src="event.homeTeamLogoUrl" alt="Home" width="20" class="flex-shrink-0" />
+        </div>
+
+        <!-- Away: logo then name left-aligned -->
+        <div class="flex-1 flex items-center gap-2 min-w-0">
+          <div v-if="!event.awayTeamLogoUrl" class="w-5 h-5 rounded-full bg-gray-700 flex-shrink-0"></div>
+          <Image v-else :src="event.awayTeamLogoUrl" alt="Away" width="20" class="flex-shrink-0" />
+          <span class="text-sm font-semibold text-white truncate">{{ event.awayTeamName }}</span>
+        </div>
       </div>
 
-      <!-- Score: horizontal, always centered -->
-      <div class="flex-shrink-0 flex items-center gap-1.5">
-        <span class="text-lg font-extrabold text-white tabular-nums leading-none">
+      <!-- Score (centered below) -->
+      <div class="flex items-center justify-center gap-1.5 pt-0.5">
+        <span class="text-sm font-extrabold text-white tabular-nums leading-none">
           {{ event.homeScore ?? '-' }}
         </span>
         <span class="text-sm text-gray-500 leading-none">:</span>
-        <span class="text-lg font-extrabold text-white tabular-nums leading-none">
+        <span class="text-sm font-extrabold text-white tabular-nums leading-none">
           {{ event.awayScore ?? '-' }}
         </span>
-      </div>
-
-      <!-- Away: logo + name, pushed away from score -->
-      <div class="flex-1 flex items-center gap-2 min-w-0">
-        <div v-if="!event.awayTeamLogoUrl" class="w-6 h-6 rounded-full bg-gray-700 flex-shrink-0"></div>
-        <Image v-else :src="event.awayTeamLogoUrl" alt="Away" width="22" />
-        <span class="text-sm font-semibold text-white truncate">{{ event.awayTeamName }}</span>
       </div>
     </div>
 
