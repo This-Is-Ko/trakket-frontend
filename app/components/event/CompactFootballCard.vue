@@ -1,7 +1,7 @@
 <template>
   <div
     :class="[
-      'group relative rounded-2xl overflow-hidden transition-all duration-300 p-4 flex flex-col gap-3',
+      'group relative rounded-2xl overflow-hidden transition-all duration-300 p-4 flex flex-col gap-1.5',
       displayOnly ? 'cursor-default' : 'hover:-translate-y-1 cursor-pointer',
     ]"
     style="background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%); border: 1px solid rgba(255,255,255,0.06);"
@@ -41,15 +41,12 @@
     </div>
 
     <!-- Venue -->
-    <div v-if="event.location" class="text-center -mt-1">
+    <div v-if="event.location" class="text-center">
       <span class="text-[11px] text-gray-500 truncate">{{ event.location }}</span>
-    </div>
-    <div v-else class="text-center -mt-1">
-      <span class="text-[11px] text-gray-500">&nbsp;</span>
     </div>
 
     <!-- Gameweek below -->
-    <div class="text-center -mt-1">
+    <div class="text-center">
       <span class="text-[11px] text-gray-500">Gameweek {{ event.round ?? '-' }}</span>
     </div>
 

@@ -115,6 +115,7 @@ const paused = ref(false)
    Surround mode — absolute-positioned cards
    ==================================================== */
 .card-slot {
+  width: 300px;
   opacity: 0.75;
 }
 
@@ -157,6 +158,11 @@ const paused = ref(false)
   width: 300px;
   flex-shrink: 0;
   display: flex;
+}
+
+/* Force card children to always fill the slot width */
+.card-slot :deep(> *) {
+  width: 100%;
 }
 
 @keyframes marquee {
