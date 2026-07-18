@@ -26,6 +26,7 @@ export interface FootballEventWrapper {
 }
 
 export interface FootballCompetition {
+    name: string;
     displayName: string;
     gender: string | null;
     logoUrl?: string | null;

@@ -1,187 +1,171 @@
 <template>
   <div class="px-2 sm:px-4 py-4">
-    <h1 class="text-4xl font-bold text-center mb-6">Football</h1>
-
-    <p class="text-center text-gray-500 mb-6" v-if="activeTab === 'competition'">
+    <h1 class="text-3xl font-extrabold tracking-tight text-center mb-2 text-white">Football</h1>
+    <p class="text-center text-gray-500 mb-6">
       Track your watched matches for {{ competitionFilter?.displayName ?? 'All competitions' }}
     </p>
-    <p class="text-center text-gray-500 mb-6" v-else>
-      Browse and track matches by team
-    </p>
 
-    <!-- Tabs: Competitions | Teams -->
-    <div class="mb-6 flex justify-center">
-      <nav class="inline-flex rounded-lg border border-white/10 overflow-hidden" aria-label="Football views">
-        <button
-            @click="goTab('competition')"
-            :class="activeTab === 'competition'
-              ? 'text-white'
-              : 'text-gray-400 hover:text-white hover:bg-white/5'"
-            class="px-4 py-2 text-sm font-medium transition-colors duration-200"
-            :aria-current="activeTab === 'competition' ? 'page' : undefined"
-            :style="activeTab === 'competition' ? { background: 'var(--p-button-primary-background)' } : {}"
+    <!-- Filter Bar -->
+    <div class="flex flex-wrap items-end justify-center gap-3 mb-6">
+      <!-- Competition dropdown -->
+      <div class="w-full sm:w-auto sm:min-w-[220px]">
+        <label class="block text-xs text-gray-500 mb-1">Competition</label>
+        <Select
+          v-model="competitionFilter"
+          :options="competitionOptions"
+          option-label="label"
+          option-value="value"
+          option-disabled="disabled"
+          placeholder="All competitions"
+          filter
+          :filter-fields="['label']"
+          class="w-full"
+          @change="onFilterChange"
         >
-          Competitions
-        </button>
-        <button
-            @click="goTab('teams')"
-            :class="activeTab === 'teams'
-              ? 'text-white'
-              : 'text-gray-400 hover:text-white hover:bg-white/5'"
-            class="px-4 py-2 text-sm font-medium border-l border-white/10 transition-colors duration-200"
-            :aria-current="activeTab === 'teams' ? 'page' : undefined"
-            :style="activeTab === 'teams' ? { background: 'var(--p-button-primary-background)' } : {}"
+          <template #option="{ option }">
+            <div class="flex items-center justify-between w-full">
+              <span>{{ option.label }}</span>
+            </div>
+          </template>
+        </Select>
+      </div>
+
+      <!-- Team dropdown -->
+      <div class="w-full sm:w-auto sm:min-w-[220px]">
+        <label class="block text-xs text-gray-500 mb-1">Team</label>
+        <Select
+          v-model="teamFilter"
+          :options="teamOptions"
+          option-label="label"
+          option-value="value"
+          placeholder="All teams"
+          filter
+          :filter-fields="['label']"
+          class="w-full"
+          @change="onFilterChange"
         >
-          Teams
-        </button>
-      </nav>
-    </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-8 gap-6">
-      <!-- Sidebar: Competitions -->
-      <div class="lg:col-span-2 order-1 lg:order-1" v-if="activeTab === 'competition'">
-        <Card>
-          <template #title>Competitions</template>
-          <template #content>
-            <div v-if="loadingCompetitions" class="flex justify-center py-6">
-              <ProgressSpinner />
+          <template #option="{ option }">
+            <div class="flex items-center justify-between w-full">
+              <span>{{ option.label }}</span>
             </div>
-
-            <div v-else-if="competitionsError" class="text-center text-gray-500 py-4">
-              Unable to load competitions. Please try again later.
-            </div>
-
-            <ul v-else class="space-y-2">
-              <li
-                  v-for="comp in competitions"
-                  :key="comp.displayName"
-                  @click="competitionFilter = comp"
-                  class="cursor-pointer px-3 py-2 rounded-md flex items-center gap-2 transition-colors duration-200"
-                  :class="{
-                    'font-semibold text-white': competitionFilter?.displayName === comp.displayName,
-                    'text-gray-400 hover:text-white hover:bg-white/5': competitionFilter?.displayName !== comp.displayName
-                  }"
-                  :style="competitionFilter?.displayName === comp.displayName ? { background: 'var(--p-button-primary-background)' } : {}"
-              >
-                <div
-                    v-if="!comp.logoUrl"
-                    class="w-6 h-6 bg-gray-300 rounded-full flex-shrink-0"
-                ></div>
-                <Image
-                    v-else
-                    :src="comp.logoUrl"
-                    alt="Competition logo"
-                    width="22"
-                />
-                {{ comp.displayName }}
-              </li>
-            </ul>
           </template>
-        </Card>
+        </Select>
       </div>
 
-      <!-- Sidebar: Teams (for Teams tab) -->
-      <div class="lg:col-span-2 order-1 lg:order-1" v-else>
-        <Card>
-          <template #title>Teams</template>
-          <template #content>
-            <Select
-                v-model="teamId"
-                :options="teamOptions"
-                optionLabel="label"
-                optionValue="value"
-                placeholder="Select Team"
-                class="w-full"
-            />
-          </template>
-        </Card>
-      </div>
-
-      <!-- Right sidebar: Event Status Filter -->
-      <div class="lg:col-span-2 order-2 lg:order-3">
-        <Card>
-          <template #title>Event Status</template>
-          <template #content>
-            <Select
-                v-model="eventStatusFilter"
-                :options="STATUS_OPTIONS"
-                optionLabel="label"
-                optionValue="value"
-                placeholder="Select Status"
-                class="w-full"
-            />
-          </template>
-        </Card>
-      </div>
-
-      <!-- Main content: Accordion -->
-      <div class="lg:col-span-4 order-3 lg:order-2">
-        <!-- Loading / Error -->
-        <div v-if="loading" class="text-center py-10 text-gray-500">
-          <ProgressSpinner />
-        </div>
-
-        <div v-else-if="fetchError" class="text-center text-gray-500">
-          <Message severity="error">Unable to load events. Please try again later.</Message>
-        </div>
-
-        <div v-else>
-          <Accordion>
-            <EventAccordion
-                v-for="ev in events"
-                :key="ev.details.id"
-                :event="ev.details"
-                :watch-status="ev.status"
-                @update:watchStatus="(val) => updateWatchStatus(ev.details.id, val)"
-            />
-          </Accordion>
-
-          <div v-if="events.length === 0" class="text-center py-8 text-gray-500">
-            No events to show.
-          </div>
-        </div>
-
-        <!-- Pagination -->
-        <div class="flex justify-center items-center gap-4 mt-4">
-          <Button @click="prevPage" :disabled="page === 0" class="px-3 py-1 border rounded">
-            Prev
-          </Button>
-          <span>Page {{ page + 1 }}</span>
-          <Button
-              @click="nextPage"
-              :disabled="lastPage"
-              class="px-3 py-1 border rounded"
-          >
-            Next
-          </Button>
-        </div>
+      <!-- Event status dropdown -->
+      <div class="w-full sm:w-auto sm:min-w-[220px]">
+        <label class="block text-xs text-gray-500 mb-1">Event Status</label>
+        <Select
+          v-model="eventStatusFilter"
+          :options="STATUS_OPTIONS"
+          option-label="label"
+          option-value="value"
+          placeholder="Select status"
+          class="w-full"
+          @change="onFilterChange"
+        />
       </div>
     </div>
 
+    <!-- Favourite toggle when a filter is selected -->
+    <div
+      v-if="competitionFilter || teamFilter"
+      class="flex justify-center mb-6"
+    >
+      <Button
+        v-if="competitionFilter"
+        :icon="favouriteStore.footballCompetitions.includes(competitionFilter.name) ? 'pi pi-star-fill' : 'pi pi-star'"
+        :label="favouriteStore.footballCompetitions.includes(competitionFilter.name) ? 'Favourited' : 'Add to favourites'"
+        severity="secondary"
+        text
+        size="small"
+        :class="{ '!text-yellow-400': favouriteStore.footballCompetitions.includes(competitionFilter.name) }"
+        @click="toggleFavourite('footballCompetitions', competitionFilter.name)"
+      />
+      <Button
+        v-if="teamFilter"
+        :icon="favouriteStore.footballTeams.includes(teamFilter.id) ? 'pi pi-star-fill' : 'pi pi-star'"
+        :label="favouriteStore.footballTeams.includes(teamFilter.id) ? 'Favourited' : 'Add to favourites'"
+        severity="secondary"
+        text
+        size="small"
+        :class="{ '!text-yellow-400': favouriteStore.footballTeams.includes(teamFilter.id) }"
+        @click="toggleFavourite('footballTeams', teamFilter.id)"
+      />
+    </div>
+
+    <!-- Loading state -->
+    <div v-if="loading && events.length === 0" class="text-center py-20 text-gray-500">
+      <ProgressSpinner />
+    </div>
+
+    <!-- Error state -->
+    <div v-else-if="fetchError && events.length === 0" class="text-center py-10 text-gray-500">
+      <Message severity="error">Unable to load events. Please try again later.</Message>
+    </div>
+
+    <!-- Card Grid -->
+    <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <CompactFootballCard
+        v-for="ev in events"
+        :key="ev.details.id"
+        :event="ev.details"
+        :watch-status="ev.status"
+        @click="openDetail(ev.details, ev.status)"
+        @update:watch-status="(val: WatchedStatus) => updateWatchStatus(ev.details.id, val)"
+      />
+
+      <!-- Infinite scroll sentinel -->
+      <div
+        v-if="!lastPage"
+        ref="sentinelRef"
+        class="col-span-full flex flex-col items-center gap-3 py-6 text-gray-500 text-sm"
+      >
+        <ProgressSpinner v-if="loading" style="width: 24px; height: 24px;" />
+        <Button
+          v-else
+          label="Load more"
+          severity="secondary"
+          text
+          size="small"
+          @click="loadMore"
+        />
+      </div>
+
+      <!-- Empty state -->
+      <div v-if="events.length === 0 && !loading" class="col-span-full text-center py-12 text-gray-500">
+        No events to show.
+      </div>
+    </div>
+
+    <!-- Detail Dialog -->
+    <EventDetailDialog
+      v-model:visible="dialogVisible"
+      sport="football"
+      :football-event="selectedEvent"
+      :watch-status="selectedEventStatus"
+      @update:watch-status="(val: WatchedStatus) => onDialogStatusUpdate(val)"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from "vue";
+import { ref, computed, onMounted, watch, onBeforeUnmount, nextTick } from "vue";
 import { useToast } from 'primevue/usetoast';
-import EventAccordion from "~/components/football/EventAccordion.vue";
+import CompactFootballCard from "~/components/event/CompactFootballCard.vue";
+import EventDetailDialog from "~/components/event/EventDetailDialog.vue";
 import {
   fetchFootballEventsWithStatus,
   updateFootballEventWatchStatus,
   fetchFootballTeams,
   fetchFootballCompetitions
 } from "~/services/footballEvents";
-import type {FootballCompetition, FootballEventWrapper, FootballTeam} from "~/types/football/events";
+import type { FootballCompetition, FootballEventWrapper, FootballTeam } from "~/types/football/events";
 import type { WatchedStatus } from "~/types/events";
 import { useUserStore } from "~/stores/useUserStore";
+import { useFavouriteStore } from "~/stores/useFavouriteStore";
+import type { FootballEventDetails } from "~/types/football/events";
 import axios from "axios";
-
-const WEEK_OPTIONS = [
-  { label: "All weeks", value: null },
-  { label: "Week 1", value: 1 },
-  { label: "Week 2", value: 2 },
-  { label: "Week 3", value: 3 },
-];
 
 const STATUS_OPTIONS = [
   { label: "All statuses", value: null },
@@ -190,20 +174,17 @@ const STATUS_OPTIONS = [
 ];
 
 const events = ref<FootballEventWrapper[]>([]);
-const activeTab = ref<'competition' | 'teams'>('competition');
 const competitionFilter = ref<FootballCompetition | null>(null);
 const eventStatusFilter = ref<"SCHEDULED" | "COMPLETED" | null>("COMPLETED");
-const round = ref<number | null>(null);
-const teamOptions = ref<{ label: string, value: number | null }[]>([{ label: "All teams", value: null }]);
-const teamId = ref<number | null>(null);
-const teams = ref<FootballTeam[]>([]);
+const teamFilter = ref<FootballTeam | null>(null);
 
 const competitions = ref<FootballCompetition[]>([]);
+const teams = ref<FootballTeam[]>([]);
 const competitionsError = ref(false);
 const loadingCompetitions = ref(false);
-
 const fetchedTeams = ref(false);
 const fetchedCompetitions = ref(false);
+
 const page = ref(0);
 const pageSize = 12;
 const toast = useToast();
@@ -211,75 +192,168 @@ const loading = ref(false);
 const lastPage = ref(true);
 const fetchError = ref(false);
 const userStore = useUserStore();
+const favouriteStore = useFavouriteStore();
+
+const sentinelRef = ref<HTMLElement | null>(null);
+let observer: IntersectionObserver | null = null;
+
+// Detail dialog state
+const dialogVisible = ref(false);
+const selectedEvent = ref<FootballEventDetails | null>(null);
+const selectedEventStatus = ref<WatchedStatus | null>(null);
+
+// Build sorted competition options: favourites first
+const competitionOptions = computed(() => {
+  const all = competitions.value.map(c => ({ label: c.displayName, value: c }));
+  const starred = all.filter(o => favouriteStore.footballCompetitions.includes(o.value.name));
+  const rest = all.filter(o => !favouriteStore.footballCompetitions.includes(o.value.name));
+  return [
+    { label: 'All competitions', value: null },
+    ...(starred.length > 0
+      ? [{ label: '— Favourites —', value: null, disabled: true } as any, ...starred]
+      : []),
+    ...(starred.length > 0
+      ? [{ label: '— All —', value: null, disabled: true } as any, ...rest]
+      : rest),
+  ];
+});
+
+// Build sorted team options: favourites first
+const teamOptions = computed(() => {
+  const all = teams.value.map(t => ({
+    label: t.gender ? `${t.name} (${t.gender})` : t.name,
+    value: t,
+  }));
+  const starred = all.filter(o => favouriteStore.footballTeams.includes(o.value.id));
+  const rest = all.filter(o => !favouriteStore.footballTeams.includes(o.value.id));
+  return [
+    { label: 'All teams', value: null },
+    ...(starred.length > 0
+      ? [{ label: '— Favourites —', value: null, disabled: true } as any, ...starred]
+      : []),
+    ...(starred.length > 0
+      ? [{ label: '— All —', value: null, disabled: true } as any, ...rest]
+      : rest),
+  ];
+});
+
+async function toggleFavourite(key: 'footballCompetitions' | 'footballTeams', value: any) {
+  let result
+  if (key === 'footballCompetitions') {
+    result = await favouriteStore.toggleFootballCompetition(value)
+  } else {
+    result = await favouriteStore.toggleFootballTeam(value)
+  }
+
+  if (result.action === 'added') {
+    toast.add({ severity: 'success', summary: 'Added to favourites', life: 2000 })
+  } else if (result.action === 'removed') {
+    toast.add({ severity: 'success', summary: 'Removed from favourites', life: 2000 })
+  } else {
+    toast.add({ severity: 'error', summary: 'Failed to update favourites', life: 3000 })
+  }
+}
+
+function isFavourite(key: 'footballCompetitions' | 'footballTeams', value: any): boolean {
+  if (key === 'footballCompetitions') return favouriteStore.footballCompetitions.includes(value)
+  return favouriteStore.footballTeams.includes(value)
+}
+
+// Selecting a competition clears the team filter, and vice versa
+watch(competitionFilter, (val) => { if (val) teamFilter.value = null });
+watch(teamFilter, (val) => { if (val) competitionFilter.value = null });
+
+function onFilterChange() {
+  page.value = 0;
+  events.value = [];
+  lastPage.value = true;
+  loadFootballEvents();
+}
 
 async function loadFootballEvents() {
   loading.value = true;
   fetchError.value = false;
   try {
-    const params: any = activeTab.value === 'competition'
-        ? {
-          competition: competitionFilter.value?.displayName ?? null,
-          page: page.value,
-          pageSize: pageSize,
-          ascending: false
-        }
-        : {
-          competition: null,
-          teamId: teamId.value,
-          page: page.value,
-          pageSize: pageSize,
-          ascending: false
-        };
+    const params: any = {
+      competition: competitionFilter.value?.displayName ?? null,
+      teamId: teamFilter.value?.id ?? null,
+      page: page.value,
+      pageSize,
+      ascending: false,
+    };
 
     if (eventStatusFilter.value !== null) params.status = eventStatusFilter.value;
-    if (activeTab.value === 'competition' && round.value !== null) params.round = round.value;
 
     const res = await fetchFootballEventsWithStatus(params);
 
-    events.value = res.events ?? [];
+    if (page.value === 0) {
+      events.value = res.events ?? [];
+    } else {
+      events.value.push(...(res.events ?? []));
+    }
     lastPage.value = res.last ?? false;
     fetchError.value = false;
   } catch (err) {
-    events.value = [];
+    if (page.value === 0) events.value = [];
     fetchError.value = true;
-    if (axios.isAxiosError(err)) {
-      const status = err.response?.status;
-      if (status === 401) {
-        userStore.showLoginDialog = true;
-      }
+    if (axios.isAxiosError(err) && err.response?.status === 401) {
+      userStore.showLoginDialog = true;
     }
   } finally {
     loading.value = false;
   }
-}
 
-// Reset page when filters change
-watch([competitionFilter, eventStatusFilter, round, teamId, activeTab], () => {
-  page.value = 0;
-});
-
-function goTab(tab: 'competition' | 'teams') {
-  activeTab.value = tab;
-  if (tab === 'teams' && teams.value.length === 0) {
-    loadTeams();
+  // Re-observe sentinel to force a fresh intersection check after loading
+  await nextTick();
+  if (sentinelRef.value && observer && !lastPage.value) {
+    observer.unobserve(sentinelRef.value);
+    observer.observe(sentinelRef.value);
   }
 }
+
+function loadMore() {
+  if (!loading.value && !lastPage.value) {
+    page.value++;
+    loadFootballEvents();
+  }
+}
+
+function setupObserver() {
+  if (observer) observer.disconnect();
+  observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting && !loading.value && !lastPage.value) {
+      page.value++;
+      loadFootballEvents();
+    }
+  }, { rootMargin: '200px' });
+}
+
+onMounted(async () => {
+  setupObserver();
+
+  await Promise.all([
+    loadCompetitions(),
+    loadTeams(),
+  ]);
+  await loadFootballEvents();
+});
+
+watch(sentinelRef, (el) => {
+  if (observer && el) observer.observe(el);
+}, { flush: 'post' });
+
+onBeforeUnmount(() => {
+  if (observer) observer.disconnect();
+});
 
 async function loadTeams() {
   if (fetchedTeams.value) return;
   try {
     const list = await fetchFootballTeams();
     teams.value = list;
-    teamOptions.value = [
-      { label: 'All teams', value: null },
-      ...list.map(t => ({
-        label: t.gender ? `${t.name} (${t.gender})` : t.name,
-        value: t.id
-      }))
-    ];
     fetchedTeams.value = true;
   } catch (_) {
-    teamOptions.value = [{ label: 'All teams', value: null }];
+    teams.value = [];
   }
 }
 
@@ -287,18 +361,9 @@ async function loadCompetitions() {
   if (fetchedCompetitions.value) return;
   loadingCompetitions.value = true;
   competitionsError.value = false;
-
   try {
     const list = await fetchFootballCompetitions();
     competitions.value = list;
-
-    if (list.length > 0) {
-      competitionFilter.value = list[0] ?? null;
-    } else {
-      competitionFilter.value = null;
-      competitionsError.value = true;
-    }
-
     fetchedCompetitions.value = true;
   } catch (_) {
     competitions.value = [];
@@ -308,46 +373,30 @@ async function loadCompetitions() {
   }
 }
 
-onMounted(async () => {
-  // load competitions first, then events
-  await loadCompetitions();
-  await loadFootballEvents();
-});
-
-// watch triggers loading when filters or pagination change
-watch([competitionFilter, eventStatusFilter, round, teamId, page, activeTab], loadFootballEvents);
-
 function updateWatchStatus(eventId: number, newStatus: WatchedStatus) {
   const wrapper = events.value.find((w) => w.details.id === eventId);
   if (wrapper) wrapper.status = newStatus;
 
   updateFootballEventWatchStatus(eventId, newStatus)
-      .then(() => {
-        toast.add({
-          severity: "success",
-          summary: "Success",
-          detail: "Watch status updated successfully",
-          life: 3000,
-        });
-      })
-      .catch(() => {
-        toast.add({
-          severity: "error",
-          summary: "Error",
-          detail: "Watch status update failed. Please try again later",
-          life: 3000,
-        });
-      });
+    .then(() => {
+      toast.add({ severity: "success", summary: "Success", detail: "Watch status updated", life: 3000 });
+    })
+    .catch(() => {
+      toast.add({ severity: "error", summary: "Error", detail: "Watch status update failed", life: 3000 });
+    });
 }
 
-function prevPage() {
-  if (page.value > 0) page.value--;
-}
-function nextPage() {
-  if (!lastPage.value) page.value++;
+function openDetail(event: FootballEventDetails, status: WatchedStatus | null) {
+  selectedEvent.value = event;
+  selectedEventStatus.value = status;
+  dialogVisible.value = true;
 }
 
-definePageMeta({
-  title: "Football"
-});
+function onDialogStatusUpdate(newStatus: WatchedStatus) {
+  if (selectedEvent.value) {
+    updateWatchStatus(selectedEvent.value.id, newStatus);
+  }
+}
+
+definePageMeta({ title: "Football" });
 </script>

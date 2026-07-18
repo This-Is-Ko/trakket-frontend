@@ -17,6 +17,11 @@ export const useUserStore = defineStore('user', {
                 });
                 this.username = res.data.username ?? null;
                 this.isLoggedIn = true;
+
+                // Sync favourites from backend after login
+                const { useFavouriteStore } = await import('~/stores/useFavouriteStore')
+                const favouriteStore = useFavouriteStore()
+                await favouriteStore.syncFromBackend()
             } catch (err: any) {
                 this.username = null;
                 this.isLoggedIn = false;
@@ -31,6 +36,11 @@ export const useUserStore = defineStore('user', {
                 });
                 this.username = res.data.username ?? null;
                 this.isLoggedIn = true;
+
+                // Sync favourites from backend after login
+                const { useFavouriteStore } = await import('~/stores/useFavouriteStore')
+                const favouriteStore = useFavouriteStore()
+                await favouriteStore.syncFromBackend()
             } catch (err: any) {
                 this.username = null;
                 this.isLoggedIn = false;

@@ -3,6 +3,10 @@
 @import "primeicons/primeicons.css";
 @custom-variant dark (&:where(.p-dark, .p-dark *));
 
+.bg-page-gradient {
+    background: linear-gradient(to bottom, #4b5563 0%, #14181c 150px, #14181c 100%);
+}
+
 :root {
     --body-bg: var(--p-surface-50);
     --body-text-color: var(--p-surface-900);

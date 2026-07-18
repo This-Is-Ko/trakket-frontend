@@ -6,6 +6,7 @@ export default defineNuxtConfig({
         head: {
             htmlAttrs: {
                 lang: 'en',
+                class: 'p-dark',
             },
             link: [
                 { rel: 'icon', href: '/favicon.ico' },
@@ -37,6 +38,7 @@ export default defineNuxtConfig({
         // Private
         '/football/**': { ssr: false },
         '/motorsport/**': { ssr: false },
+        '/favourites/**': { ssr: false },
         '/statistics/**': { ssr: false },
     },
     sitemap: {

@@ -30,7 +30,7 @@
           <div class="relative">
             <button
               @click="toggleStatsMenu"
-              class="px-3 py-1.5 text-sm font-medium rounded-full transition-colors duration-200 flex items-center gap-1"
+              class="px-3 py-1.5 text-sm font-medium rounded-full transition-colors duration-200 flex items-center gap-1 bg-transparent border-none cursor-pointer"
               :class="navClass('/statistics')"
             >
               Statistics
@@ -89,14 +89,15 @@ const toggleStatsMenu = (event) => {
 };
 
 const navItems = [
+  { label: "Favourites", icon: "pi pi-star", to: "/favourites" },
   { label: "Football", to: "/football" },
   { label: "Motorsport", to: "/motorsport" },
 ];
 
 const statsItems = [
-  { label: "All", to: "/statistics" },
-  { label: "Football", to: "/statistics/football" },
-  { label: "Motorsport", to: "/statistics/motorsport" },
+  { label: "All", icon: "pi pi-chart-bar", command: () => router.push("/statistics") },
+  { label: "Football", icon: "pi pi-fw pi-futbol", command: () => router.push("/statistics/football") },
+  { label: "Motorsport", icon: "pi pi-fw pi-flag", command: () => router.push("/statistics/motorsport") },
 ];
 
 const toast = useToast();

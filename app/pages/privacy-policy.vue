@@ -62,7 +62,7 @@
     </section>
 
     <p class="mt-8 text-sm text-gray-500">
-      Last Updated: September 2025
+      Last Updated: July 2026
     </p>
   </div>
 </template>

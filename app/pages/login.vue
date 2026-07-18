@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col justify-center items-center px-4 bg-gray-950 text-gray-100"
+  <div class="relative flex flex-col justify-center items-center px-4 text-gray-100"
        :style="{ minHeight: 'calc(100vh - 64px)' }">
     <!-- Subtle background glow -->
     <div class="absolute inset-0 pointer-events-none overflow-hidden">
@@ -49,19 +49,24 @@
 
 <script setup lang="ts">
 import { ref, onMounted, nextTick } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { useToast } from 'primevue/usetoast';
 import { useUserStore } from "~/stores/useUserStore";
 
 const route = useRoute();
+const router = useRouter();
 const toast = useToast();
+const userStore = useUserStore();
+
+// Redirect logged-in users to /favourites
+if (userStore.isLoggedIn) {
+  await navigateTo('/favourites', { redirectCode: 302 });
+}
 const email = ref("");
 const password = ref("");
 const loading = ref(false);
 const showErrors = ref(false);
 const googleButtonRef = ref<HTMLElement | null>(null);
-
-const router = useRouter();
 
 const config = useRuntimeConfig();
 const googleClientId = config.public.googleClientId as string;
@@ -127,7 +132,7 @@ async function handleGoogleLogin(idToken: string) {
       detail: "You have logged in successfully.",
       life: 4000,
     });
-    await router.push("/football");
+    await router.push("/favourites");
   } catch (err: any) {
     showError(err.message || "Google login failed. Please try again.");
   } finally {
@@ -157,7 +162,7 @@ async function onLogin() {
       detail: "You have logged in successfully.",
       life: 4000,
     });
-    await router.push("/football");
+    await router.push("/favourites");
   } catch (err) {
     showError("Login failed. Please check your credentials.");
   } finally {
