@@ -70,7 +70,5 @@ export const useUserStore = defineStore('user', {
             await api.post("/api/auth/logout", {}).catch(() => {});
         },
     },
-    persist: {
-        storage: piniaPluginPersistedstate.localStorage(),
-    },
+    persist: true,
 });
