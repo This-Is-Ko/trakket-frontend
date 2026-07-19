@@ -5,8 +5,12 @@ export const useUserStore = defineStore('user', {
     state: () => ({
         username: null as string | null,
         isLoggedIn: false,
-        showLoginDialog: false
+        showLoginDialog: false,
+        role: null as string | null
     }),
+    getters: {
+        isAdmin: (state) => state.role === 'ROLE_ADMIN',
+    },
     actions: {
         async login(email: string, password: string) {
             const api = createApi();
@@ -17,6 +21,7 @@ export const useUserStore = defineStore('user', {
                 });
                 this.username = res.data.username ?? null;
                 this.isLoggedIn = true;
+                this.role = res.data.role ?? null;
 
                 // Sync favourites from backend after login
                 const { useFavouriteStore } = await import('~/stores/useFavouriteStore')
@@ -25,6 +30,7 @@ export const useUserStore = defineStore('user', {
             } catch (err: any) {
                 this.username = null;
                 this.isLoggedIn = false;
+                this.role = null;
                 throw new Error(err.response?.data?.message || "Login failed");
             }
         },
@@ -36,6 +42,7 @@ export const useUserStore = defineStore('user', {
                 });
                 this.username = res.data.username ?? null;
                 this.isLoggedIn = true;
+                this.role = res.data.role ?? null;
 
                 // Sync favourites from backend after login
                 const { useFavouriteStore } = await import('~/stores/useFavouriteStore')
@@ -53,6 +60,7 @@ export const useUserStore = defineStore('user', {
                 const res = await api.get("/api/auth/me");
                 this.username = res.data.username ?? null;
                 this.isLoggedIn = true;
+                this.role = res.data.role ?? null;
             } catch (err: any) {
                 if (err.response && err.response.status === 401) {
                     this.username = null;
@@ -67,6 +75,7 @@ export const useUserStore = defineStore('user', {
             const api = createApi();
             this.username = null;
             this.isLoggedIn = false;
+            this.role = null;
             await api.post("/api/auth/logout", {}).catch(() => {});
         },
     },

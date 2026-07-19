@@ -40,6 +40,7 @@ export default defineNuxtConfig({
         '/motorsport/**': { ssr: false },
         '/favourites/**': { ssr: false },
         '/statistics/**': { ssr: false },
+        '/admin/**': { ssr: false },
     },
     sitemap: {
         autoLastmod: true,
