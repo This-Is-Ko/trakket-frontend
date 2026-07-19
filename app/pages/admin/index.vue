@@ -281,6 +281,10 @@ definePageMeta({
   description: "Admin panel for Trakket",
 });
 
+useSeoMeta({
+  robots: 'noindex, nofollow',
+})
+
 const router = useRouter();
 const userStore = useUserStore();
 

@@ -317,5 +317,14 @@ function onDialogStatusUpdate(newStatus: WatchedStatus) {
   }
 }
 
-definePageMeta({ title: "Motorsport" });
+definePageMeta({ title: 'Motorsport' });
+
+useSeoMeta({
+  title: 'Motorsport',
+  description: 'Browse motorsport races across Formula 1, MotoGP, and more. Log races you have watched and track your viewing history.',
+  ogTitle: 'Motorsport — Trakket',
+  ogDescription: 'Browse motorsport races across Formula 1, MotoGP, and more. Log races you have watched and track your viewing history.',
+  ogImage: '/og-image.png',
+  ogUrl: 'https://www.trakket.com/motorsport',
+})
 </script>

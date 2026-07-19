@@ -644,4 +644,13 @@ onMounted(async () => {
 });
 
 definePageMeta({ title: 'Football Statistics' });
+
+useSeoMeta({
+  title: 'Football Statistics',
+  description: 'View your football viewing statistics — matches watched, leagues followed, and trends over time.',
+  ogTitle: 'Football Statistics — Trakket',
+  ogDescription: 'View your football viewing statistics — matches watched, leagues followed, and trends over time.',
+  ogImage: '/og-image.png',
+  ogUrl: 'https://www.trakket.com/statistics/football',
+})
 </script>

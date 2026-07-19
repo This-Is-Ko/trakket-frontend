@@ -557,4 +557,13 @@ onMounted(async () => {
 });
 
 definePageMeta({ title: 'Statistics' });
+
+useSeoMeta({
+  title: 'Statistics',
+  description: 'View your sports viewing statistics across football and motorsport. Understand your watching habits and trends.',
+  ogTitle: 'Statistics — Trakket',
+  ogDescription: 'View your sports viewing statistics across football and motorsport. Understand your watching habits and trends.',
+  ogImage: '/og-image.png',
+  ogUrl: 'https://www.trakket.com/statistics',
+})
 </script>

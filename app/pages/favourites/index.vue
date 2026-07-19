@@ -564,13 +564,13 @@ onBeforeUnmount(() => {
 definePageMeta({ title: 'Favourites' })
 
 useSeoMeta({
-  title: 'Favourites — Trakket',
+  title: 'Favourites',
   description:
     'View events from your favourite competitions, teams, and championships across all sports.',
   ogTitle: 'Favourites — Trakket',
   ogDescription:
     'View events from your favourite competitions, teams, and championships across all sports.',
-  ogImage: '/favicon-32x32.png',
+  ogImage: '/og-image.png',
   ogUrl: 'https://www.trakket.com/favourites',
 })
 </script>

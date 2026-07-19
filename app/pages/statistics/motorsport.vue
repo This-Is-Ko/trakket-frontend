@@ -581,4 +581,13 @@ onMounted(async () => {
 });
 
 definePageMeta({ title: 'Motorsport Statistics' });
+
+useSeoMeta({
+  title: 'Motorsport Statistics',
+  description: 'View your motorsport viewing statistics — races watched, championships followed, and trends over time.',
+  ogTitle: 'Motorsport Statistics — Trakket',
+  ogDescription: 'View your motorsport viewing statistics — races watched, championships followed, and trends over time.',
+  ogImage: '/og-image.png',
+  ogUrl: 'https://www.trakket.com/statistics/motorsport',
+})
 </script>

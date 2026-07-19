@@ -162,11 +162,11 @@ definePageMeta({
 })
 
 useSeoMeta({
-  title: 'Trakket — Track Every Sporting Event You Watch',
+  title: 'Track Every Sporting Event You Watch',
   description: 'Log matches, races, and games across all sports. Understand your viewing habits with rich statistics.',
-  ogTitle: 'Trakket — Track Every Sporting Event You Watch',
+  ogTitle: 'Track Every Sporting Event You Watch — Trakket',
   ogDescription: 'Log matches, races, and games across all sports. Understand your viewing habits with rich statistics.',
-  ogImage: '/favicon-32x32.png',
+  ogImage: '/og-image.png',
   ogUrl: 'https://www.trakket.com/',
 })
 </script>
