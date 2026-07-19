@@ -45,6 +45,9 @@ export default defineNuxtConfig({
     sitemap: {
         autoLastmod: true,
     },
+    seo: {
+        canonical: 'noTrailingSlash',
+    },
     robots: {
         enabled: true,
     },
