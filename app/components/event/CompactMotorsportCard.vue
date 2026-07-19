@@ -143,9 +143,9 @@ const statusMenuItems = computed(() => [
 
 const shortDate = computed(() => {
   if (!props.event.dateTime) return '-'
-  return new Date(props.event.dateTime).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-  })
+  const d = new Date(props.event.dateTime)
+  const opts: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric' }
+  if (d.getFullYear() !== new Date().getFullYear()) opts.year = 'numeric'
+  return d.toLocaleDateString('en-US', opts)
 })
 </script>
