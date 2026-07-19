@@ -27,6 +27,10 @@ export const useUserStore = defineStore('user', {
                 const { useFavouriteStore } = await import('~/stores/useFavouriteStore')
                 const favouriteStore = useFavouriteStore()
                 await favouriteStore.syncFromBackend()
+                // Sync consent from backend after login
+                const { useCookieConsentStore } = await import('~/stores/useCookieConsentStore');
+                const consentStore = useCookieConsentStore();
+                await consentStore.syncToBackend();
             } catch (err: any) {
                 this.username = null;
                 this.isLoggedIn = false;
@@ -48,6 +52,10 @@ export const useUserStore = defineStore('user', {
                 const { useFavouriteStore } = await import('~/stores/useFavouriteStore')
                 const favouriteStore = useFavouriteStore()
                 await favouriteStore.syncFromBackend()
+                // Sync consent from backend after login
+                const { useCookieConsentStore } = await import('~/stores/useCookieConsentStore');
+                const consentStore = useCookieConsentStore();
+                await consentStore.syncToBackend();
             } catch (err: any) {
                 this.username = null;
                 this.isLoggedIn = false;
@@ -61,6 +69,11 @@ export const useUserStore = defineStore('user', {
                 this.username = res.data.username ?? null;
                 this.isLoggedIn = true;
                 this.role = res.data.role ?? null;
+
+                // Hydrate consent from backend (takes precedence over localStorage)
+                const { useCookieConsentStore } = await import('~/stores/useCookieConsentStore');
+                const consentStore = useCookieConsentStore();
+                consentStore.hydrateFromBackend(res.data.consent?.status ?? null);
             } catch (err: any) {
                 if (err.response && err.response.status === 401) {
                     this.username = null;

@@ -191,11 +191,11 @@ definePageMeta({
 });
 
 useSeoMeta({
-  title: "Login to Trakket",
+  title: 'Login',
   description: "Access your Trakket account to track your sports viewing history and explore insights into your habits.",
-  ogTitle: "Login to Trakket",
+  ogTitle: 'Login — Trakket',
   ogDescription: "Log in to your Trakket account and continue tracking the sports you watch.",
-  ogImage: "/favicon-32x32.png",
-  ogUrl: "https://www.trakket.com/login",
+  ogImage: '/og-image.png',
+  ogUrl: 'https://www.trakket.com/login',
 });
 </script>

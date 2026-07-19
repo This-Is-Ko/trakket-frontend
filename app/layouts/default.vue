@@ -54,7 +54,5 @@ const redirectToLogin = async () => {
   await router.push("/login");
 };
 
-useHead({
-  meta: [{ property: 'og:title', content: `${route.meta.title} | Trakket` }]
-})
+// Page-level useSeoMeta handles OG tags — no override needed here
 </script>

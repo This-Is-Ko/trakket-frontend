@@ -399,4 +399,13 @@ function onDialogStatusUpdate(newStatus: WatchedStatus) {
 }
 
 definePageMeta({ title: "Football" });
+
+useSeoMeta({
+  title: 'Football',
+  description: 'Browse football matches across the Premier League, La Liga, and more. Log matches you have watched and track your viewing history.',
+  ogTitle: 'Football — Trakket',
+  ogDescription: 'Browse football matches across the Premier League, La Liga, and more. Log matches you have watched and track your viewing history.',
+  ogImage: '/og-image.png',
+  ogUrl: 'https://www.trakket.com/football',
+})
 </script>

@@ -78,11 +78,11 @@ definePageMeta({
 })
 
 useSeoMeta({
-  title: "About Trakket",
+  title: 'About',
   description: "Learn about Trakket — a personal sports viewing tracker for logging football and motorsport matches you've watched, with insights into your watching habits.",
-  ogTitle: "About Trakket",
+  ogTitle: 'About — Trakket',
   ogDescription: "Discover how Trakket helps you log the football matches and motorsport races you've watched and gain insights into your sports viewing history.",
-  ogImage: "/favicon-32x32.png",
-  ogUrl: "https://www.trakket.com/about",
+  ogImage: '/og-image.png',
+  ogUrl: 'https://www.trakket.com/about',
 })
 </script>
