@@ -2,6 +2,7 @@
   <Dialog
     v-model:visible="visible"
     modal
+    dismissableMask
     :header="dialogTitle"
     class="!max-w-md w-full"
     :pt="{
