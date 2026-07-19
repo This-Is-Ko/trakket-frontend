@@ -1,4 +1,11 @@
 import { createApi } from "~/services/api";
+import type {
+    FootballEventUpdateRequest,
+    MotorsportEventUpdateRequest,
+    AdminPaginatedResponse,
+    AdminFootballEvent,
+    AdminMotorsportEvent,
+} from "~/types/admin";
 
 // ─── Admin Stats ──────────────────────────────────────────────────────────
 
@@ -66,4 +73,48 @@ export async function initMotorsportCompetition(competition?: string): Promise<s
         params: competition ? { competition } : {},
     });
     return res.data as string;
+}
+
+// ─── Admin Event Management ─────────────────────────────────────────────────
+
+export async function fetchAdminFootballEvents(params: {
+    page?: number;
+    pageSize?: number;
+    competition?: string;
+    status?: string;
+    ascending?: boolean;
+}): Promise<AdminPaginatedResponse<AdminFootballEvent>> {
+    const api = createApi();
+    const res = await api.get("/api/admin/events/football", { params });
+    return res.data as AdminPaginatedResponse<AdminFootballEvent>;
+}
+
+export async function fetchAdminMotorsportEvents(params: {
+    page?: number;
+    pageSize?: number;
+    competition?: string;
+    status?: string;
+    ascending?: boolean;
+}): Promise<AdminPaginatedResponse<AdminMotorsportEvent>> {
+    const api = createApi();
+    const res = await api.get("/api/admin/events/motorsport", { params });
+    return res.data as AdminPaginatedResponse<AdminMotorsportEvent>;
+}
+
+export async function updateFootballEvent(
+    id: number,
+    request: FootballEventUpdateRequest
+): Promise<any> {
+    const api = createApi();
+    const res = await api.put(`/api/admin/events/football/${id}`, request);
+    return res.data;
+}
+
+export async function updateMotorsportEvent(
+    id: number,
+    request: MotorsportEventUpdateRequest
+): Promise<any> {
+    const api = createApi();
+    const res = await api.put(`/api/admin/events/motorsport/${id}`, request);
+    return res.data;
 }

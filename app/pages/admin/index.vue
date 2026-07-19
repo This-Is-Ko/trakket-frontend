@@ -1,8 +1,13 @@
 <template>
   <div class="px-2 sm:px-4 py-4 max-w-6xl mx-auto">
-    <h1 class="text-3xl font-extrabold tracking-tight text-center mb-2 text-white">
-      Admin Panel
-    </h1>
+    <div class="flex items-center justify-between mb-2">
+      <h1 class="text-3xl font-extrabold tracking-tight text-white">
+        Admin Panel
+      </h1>
+      <NuxtLink to="/admin/events">
+        <Button label="Manage Events" icon="pi pi-pencil" severity="info" size="small" />
+      </NuxtLink>
+    </div>
     <p class="text-center text-gray-500 mb-8">Event sync &amp; system statistics</p>
 
     <!-- ═══ Stats Section ═══ -->

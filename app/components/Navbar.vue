@@ -126,22 +126,36 @@ const mobileMenuItems = [
 
 const toast = useToast();
 
-const userMenu = computed(() => [
-  {
-    label: `Hi ${userStore.username || 'there'}`,
-    icon: "pi pi-user",
-    disabled: true,
-  },
-  { separator: true },
-  {
+const userMenu = computed(() => {
+  const items = [
+    {
+      label: `Hi ${userStore.username || 'there'}`,
+      icon: "pi pi-user",
+      disabled: true,
+    },
+    { separator: true },
+  ];
+
+  if (userStore.isAdmin) {
+    items.push({
+      label: "Admin Panel",
+      icon: "pi pi-cog",
+      command: () => router.push("/admin"),
+    });
+    items.push({ separator: true });
+  }
+
+  items.push({
     label: "Logout",
     icon: "pi pi-sign-out",
     command: async () => {
       await userStore.logout();
       await router.push("/?loggedOut=true");
     }
-  }
-]);
+  });
+
+  return items;
+});
 
 const navClass = (path) => {
   const active = path === '/' ? route.path === path : route.path.startsWith(path);

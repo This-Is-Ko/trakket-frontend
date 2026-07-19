@@ -19,7 +19,7 @@
                     label="Got it"
                     severity="info"
                     size="small"
-                    @click="store.accept()"
+                    @click="handleAccept"
                     class="shrink-0"
                 />
             </div>
@@ -31,6 +31,11 @@
 import { useCookieConsentStore } from "~/stores/useCookieConsentStore";
 
 const store = useCookieConsentStore();
+
+function handleAccept() {
+    store.accept();
+    store.syncToBackend();
+}
 </script>
 
 <style scoped>
