@@ -388,8 +388,16 @@ async function loadEvents() {
   fetchError.value = false
 
   try {
-    // Build sports param
-    const sports = sportFilter.value ? [sportFilter.value as 'football' | 'motorsport'] : undefined
+    // Build sports param — derive from sport filter, or fall back to the
+    // selected competition/team filter so the correct sport is always sent.
+    let sports: ('football' | 'motorsport')[] | undefined
+    if (sportFilter.value) {
+      sports = [sportFilter.value as 'football' | 'motorsport']
+    } else if (competitionFilter.value) {
+      sports = [competitionFilter.value.sport]
+    } else if (teamFilter.value) {
+      sports = ['football']
+    }
 
     // Build competition filter
     const competitions = competitionFilter.value

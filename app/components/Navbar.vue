@@ -13,7 +13,7 @@
           <span class="text-lg font-bold text-white tracking-tight">TRAKKET</span>
         </NuxtLink>
 
-        <!-- Navigation links -->
+        <!-- Desktop Navigation links -->
         <nav class="hidden md:flex items-center gap-1">
           <NuxtLink
             v-for="item in navItems"
@@ -42,6 +42,15 @@
 
       <!-- Right: Auth actions -->
       <div class="flex items-center gap-3">
+        <!-- Mobile hamburger -->
+        <Button
+          icon="pi pi-bars"
+          text
+          class="!text-gray-400 hover:!text-white md:!hidden"
+          @click="toggleMobileMenu"
+        />
+        <Menu ref="mobileMenuRef" :model="mobileMenuItems" popup />
+
         <template v-if="userStore.isLoggedIn">
           <span class="text-sm text-gray-300 hidden sm:inline">
             Hi {{ userStore.username || 'there' }}
@@ -68,7 +77,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useUserStore } from "~/stores/useUserStore.js";
 
@@ -78,6 +87,7 @@ const userStore = useUserStore();
 
 const menu = ref(null);
 const statsMenu = ref(null);
+const mobileMenuRef = ref(null);
 
 const toggleMenu = (event) => {
   menu.value.toggle(event);
@@ -85,6 +95,10 @@ const toggleMenu = (event) => {
 
 const toggleStatsMenu = (event) => {
   statsMenu.value.toggle(event);
+};
+
+const toggleMobileMenu = (event) => {
+  mobileMenuRef.value.toggle(event);
 };
 
 const navItems = [
@@ -99,9 +113,26 @@ const statsItems = [
   { label: "Motorsport", icon: "pi pi-fw pi-flag", command: () => router.push("/statistics/motorsport") },
 ];
 
+// Mobile menu: combines nav links + stats sub-items
+const mobileMenuItems = [
+  { label: "Favourites", icon: "pi pi-star", command: () => router.push("/favourites") },
+  { label: "⚽ Football", command: () => router.push("/football") },
+  { label: "🏎️ Motorsport", command: () => router.push("/motorsport") },
+  { separator: true },
+  { label: "Statistics — All", icon: "pi pi-chart-bar", command: () => router.push("/statistics") },
+  { label: "⚽ Statistics — Football", command: () => router.push("/statistics/football") },
+  { label: "🏎️ Statistics — Motorsport", command: () => router.push("/statistics/motorsport") },
+];
+
 const toast = useToast();
 
-const userMenu = [
+const userMenu = computed(() => [
+  {
+    label: `Hi ${userStore.username || 'there'}`,
+    icon: "pi pi-user",
+    disabled: true,
+  },
+  { separator: true },
   {
     label: "Logout",
     icon: "pi pi-sign-out",
@@ -110,7 +141,7 @@ const userMenu = [
       await router.push("/?loggedOut=true");
     }
   }
-];
+]);
 
 const navClass = (path) => {
   const active = path === '/' ? route.path === path : route.path.startsWith(path);
