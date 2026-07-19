@@ -423,6 +423,11 @@ async function loadEvents() {
       events.value.push(...(res.events ?? []))
     }
     lastPage.value = res.last ?? false
+    // Safety: if backend returns no events, stop paginating to prevent
+    // an infinite loading loop when the backend miscounts totalElements.
+    if ((res.events ?? []).length === 0) {
+      lastPage.value = true
+    }
     fetchError.value = false
   } catch (err) {
     if (page.value === 0) events.value = []
