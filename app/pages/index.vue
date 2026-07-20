@@ -54,7 +54,7 @@
     </header>
 
     <!-- ===== Hero Content ===== -->
-    <div class="relative min-h-screen flex items-center justify-center px-4 pt-16 pb-12">
+    <div class="relative min-h-[80vh] sm:min-h-screen flex items-center justify-center px-4 pt-12 sm:pt-16 pb-4 sm:pb-12">
       <!-- Example event cards around the hero (wide screens only) -->
       <div class="hidden 2xl:block">
         <LandingHeroEventCards
@@ -103,7 +103,7 @@
     <!-- Example event cards strip below hero (medium screens only) -->
     <LandingHeroEventCards
       mode="strip"
-      class="-mt-24 mb-8"
+      class="-mt-12 sm:-mt-24 mb-4 sm:mb-8"
       :events="previewEvents"
     />
 

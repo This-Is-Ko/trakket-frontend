@@ -1,5 +1,5 @@
 <template>
-  <div class="hero-cards-container" :class="mode === 'surround' ? 'hidden 2xl:block' : 'hidden lg:block 2xl:hidden'">
+  <div class="hero-cards-container" :class="mode === 'surround' ? 'hidden 2xl:block' : 'block 2xl:hidden'">
     <!-- Surround mode: absolute-positioned cards flanking the hero -->
     <template v-if="mode === 'surround'">
       <div v-if="evt(0)" class="card-slot pos-left-top">
@@ -138,6 +138,12 @@ function toMotorsportEvent(e: LandingEvent): MotorsportEventDetails {
 .card-slot {
   width: 300px;
   opacity: 0.75;
+}
+
+@media (max-width: 639px) {
+  .card-slot {
+    width: 260px;
+  }
 }
 
 /* surround mode positions — tuned for 1080p (~1920px) */
