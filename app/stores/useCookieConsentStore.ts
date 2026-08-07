@@ -49,5 +49,5 @@ export const useCookieConsentStore = defineStore('cookieConsent', {
             }
         },
     },
-    persist: true,
+    persist: { storage: localStorage },
 });

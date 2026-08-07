@@ -34,7 +34,6 @@ const store = useCookieConsentStore();
 
 function handleAccept() {
     store.accept();
-    store.syncToBackend();
 }
 </script>
 
