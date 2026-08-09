@@ -12,6 +12,7 @@
       <div class="flex items-center gap-6">
         <NuxtLink to="/about" class="text-xs text-gray-500 hover:text-gray-300 transition-colors">About</NuxtLink>
         <NuxtLink to="/privacy-policy" class="text-xs text-gray-500 hover:text-gray-300 transition-colors">Privacy</NuxtLink>
+        <NuxtLink to="/faq" class="text-xs text-gray-500 hover:text-gray-300 transition-colors">FAQ</NuxtLink>
         <a href="mailto:sportswatchtracker@gmail.com" class="text-xs text-gray-500 hover:text-gray-300 transition-colors">Contact</a>
       </div>
     </div>

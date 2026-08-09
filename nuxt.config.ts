@@ -30,6 +30,7 @@ export default defineNuxtConfig({
         '/': { prerender: true },
         '/about': { prerender: true },
         '/privacy-policy': { prerender: true },
+        '/faq': { prerender: true },
 
         // Auth related
         '/login': { ssr: true },
