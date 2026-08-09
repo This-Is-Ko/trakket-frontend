@@ -54,7 +54,7 @@
     </header>
 
     <!-- ===== Hero Content ===== -->
-    <div class="relative min-h-[80vh] sm:min-h-screen flex items-center justify-center px-4 pt-12 sm:pt-16 pb-4 sm:pb-12">
+    <div class="relative min-h-[85vh] sm:min-h-[85vh] flex items-center justify-center px-4 pt-12 sm:pt-16 pb-4 sm:pb-12">
       <!-- Example event cards around the hero (wide screens only) -->
       <div class="hidden 2xl:block">
         <LandingHeroEventCards
@@ -103,9 +103,12 @@
     <!-- Example event cards strip below hero (medium screens only) -->
     <LandingHeroEventCards
       mode="strip"
-      class="-mt-12 sm:-mt-24 mb-4 sm:mb-8"
+      class="-mt-12 sm:-mt-24 mb-1 sm:mb-2"
       :events="previewEvents"
     />
+
+    <!-- SEO content sections -->
+    <LandingContent />
 
     <!-- Footer -->
     <footer class="relative z-10 border-t border-white/5 py-8 px-6">
@@ -122,7 +125,7 @@
           <NuxtLink to="/about" class="text-xs text-gray-500 hover:text-gray-300 transition-colors">About</NuxtLink>
           <NuxtLink to="/privacy-policy" class="text-xs text-gray-500 hover:text-gray-300 transition-colors">Privacy</NuxtLink>
           <NuxtLink to="/faq" class="text-xs text-gray-500 hover:text-gray-300 transition-colors">FAQ</NuxtLink>
-          <a href="mailto:sportswatchtracker@gmail.com" class="text-xs text-gray-500 hover:text-gray-300 transition-colors">Contact</a>
+          <a href="mailto:sportswatchtracker@gmail.com" rel="noopener" class="text-xs text-gray-500 hover:text-gray-300 transition-colors">Contact</a>
         </div>
       </div>
     </footer>
@@ -134,6 +137,7 @@ import { onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
 import LandingHeroEventCards from '~/components/landing/HeroEventCards.vue'
+import LandingContent from '~/components/landing/LandingContent.vue'
 import { useUserStore } from '~/stores/useUserStore'
 import { useLandingPreviewEvents } from '~/composables/useLandingPreviewEvents'
 
@@ -158,17 +162,24 @@ onMounted(() => {
 
 definePageMeta({
   public: true,
-  title: 'Home',
   layout: 'landing',
+})
+
+// -- Structured data for the homepage --
+defineWebPage({
+  '@type': 'WebPage',
+  name: 'Trakket — Track Every Sporting Event You Watch',
+  description: 'Log every football match and motorsport race you watch. Understand your viewing habits with rich statistics — all in one place.',
 })
 
 useSeoMeta({
   title: 'Track Every Sporting Event You Watch',
-  description: 'Log matches, races, and games across all sports. Understand your viewing habits with rich statistics.',
+  description: 'Log every football match and motorsport race you watch. Understand your viewing habits with rich statistics — all in one place.',
   ogTitle: 'Track Every Sporting Event You Watch — Trakket',
-  ogDescription: 'Log matches, races, and games across all sports. Understand your viewing habits with rich statistics.',
+  ogDescription: 'Log every football match and motorsport race you watch. Understand your viewing habits with rich statistics — all in one place.',
   ogImage: '/og-image.png',
   ogUrl: 'https://www.trakket.com/',
+  ogType: 'website',
 })
 </script>
 
