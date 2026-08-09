@@ -9,7 +9,7 @@ import { onMounted } from 'vue'
 import { useUserStore } from '~/stores/useUserStore'
 import { useFavouriteStore } from '~/stores/useFavouriteStore'
 
-// -- Structured data (Organization + WebSite) --
+// -- Structured data (Organization + WebSite + SoftwareApplication) --
 defineOrganization({
   name: 'Trakket',
   url: 'https://www.trakket.com',
@@ -20,6 +20,14 @@ defineWebSite({
   name: 'Trakket',
   url: 'https://www.trakket.com',
   description: 'Track every sporting event you watch — log matches and races, understand your viewing habits.',
+})
+
+defineSoftwareApp({
+  name: 'Trakket',
+  operatingSystem: 'Web',
+  applicationCategory: 'SportsApplication',
+  url: 'https://www.trakket.com',
+  description: 'Track every sporting event you watch — log matches and races, understand your viewing habits with rich statistics.',
 })
 
 useHead({
