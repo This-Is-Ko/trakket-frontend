@@ -2,15 +2,31 @@ import type { WatchedStatus } from "~/types/events";
 
 // ─── Admin Event Update Requests ────────────────────────────────────────────
 
+export type EventStatus = "SCHEDULED" | "IN_PROGRESS" | "COMPLETED";
+
 export interface FootballEventUpdateRequest {
     dateTime: string;
+    competition: string;
+    status: EventStatus;
+    round?: number | null;
+    location?: string | null;
+    externalLink?: string | null;
     homeScore?: number | null;
     awayScore?: number | null;
 }
 
 export interface MotorsportEventUpdateRequest {
     dateTime: string;
+    competition: string;
+    status: EventStatus;
+    round?: number | null;
+    season?: number | null;
+    location?: string | null;
+    externalLink?: string | null;
+    raceName: string;
+    circuitName?: string | null;
     winner?: string | null;
+    flagUrl?: string | null;
 }
 
 // ─── Admin Event List Types ─────────────────────────────────────────────────
@@ -37,6 +53,7 @@ export interface AdminFootballEvent {
     awayTeamName: string;
     awayTeamLogoUrl: string | null;
     awayScore: number | null;
+    externalLink: string | null;
 }
 
 export interface AdminMotorsportEvent {
@@ -44,6 +61,7 @@ export interface AdminMotorsportEvent {
     dateTime: string;
     competition: CompetitionInfo;
     round: number | null;
+    season: number | null;
     location: string | null;
     status: string;
     title: string;
@@ -52,6 +70,7 @@ export interface AdminMotorsportEvent {
     circuitName: string | null;
     winner: string | null;
     flagUrl: string | null;
+    externalLink: string | null;
 }
 
 export interface AdminPaginatedResponse<T> {
