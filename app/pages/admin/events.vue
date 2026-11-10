@@ -139,13 +139,24 @@
                   </template>
                 </td>
                 <td class="px-4 py-3 text-right">
-                  <Button
-                    icon="pi pi-pencil"
-                    severity="info"
-                    size="small"
-                    text
-                    @click="openEditDialog(event)"
-                  />
+                  <div class="flex items-center justify-end gap-1">
+                    <Button
+                      icon="pi pi-pencil"
+                      severity="info"
+                      size="small"
+                      text
+                      @click="openEditDialog(event)"
+                    />
+                    <Button
+                      icon="pi pi-trash"
+                      severity="danger"
+                      size="small"
+                      text
+                      :loading="deletingId === event.id"
+                      :disabled="deletingId !== null && deletingId !== event.id"
+                      @click="confirmDelete(event)"
+                    />
+                  </div>
                 </td>
               </tr>
             </tbody>
@@ -358,6 +369,8 @@
         </div>
       </div>
     </Dialog>
+
+    <ConfirmDialog />
   </div>
 </template>
 
@@ -365,12 +378,15 @@
 import { ref, reactive, computed, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useToast } from "primevue/usetoast";
+import { useConfirm } from "primevue/useconfirm";
 import { useUserStore } from "~/stores/useUserStore";
 import {
   fetchAdminFootballEvents,
   fetchAdminMotorsportEvents,
   updateFootballEvent,
   updateMotorsportEvent,
+  deleteFootballEvent,
+  deleteMotorsportEvent,
 } from "~/services/admin";
 import { fetchFootballCompetitions } from "~/services/footballEvents";
 import { fetchMotorsportCompetitions } from "~/services/motorsportEvents";
@@ -396,6 +412,7 @@ useSeoMeta({
 
 const router = useRouter();
 const toast = useToast();
+const confirm = useConfirm();
 const userStore = useUserStore();
 const { formatDate } = useFormatters();
 
@@ -711,6 +728,78 @@ async function saveEdit() {
     }
   } finally {
     saving.value = false;
+  }
+}
+
+// ─── Delete ────────────────────────────────────────────────────────────────
+
+const deletingId = ref<number | null>(null);
+
+function confirmDelete(ev: any) {
+  confirm.require({
+    message: `Delete "${ev.title}"? Users' watch statuses for this event will also be removed.`,
+    header: "Confirm Delete",
+    icon: "pi pi-exclamation-triangle",
+    rejectProps: { label: "Cancel", severity: "secondary", outlined: true },
+    acceptProps: { label: "Delete", severity: "danger" },
+    accept: () => performDelete(ev),
+  });
+}
+
+async function performDelete(ev: any) {
+  deletingId.value = ev.id;
+  try {
+    if (activeTab.value === "football") {
+      await deleteFootballEvent(ev.id);
+    } else {
+      await deleteMotorsportEvent(ev.id);
+    }
+
+    toast.add({
+      severity: "success",
+      summary: "Deleted",
+      detail: "Event deleted successfully",
+      life: 3000,
+    });
+
+    // Avoid landing on an empty page when the last row on a page is removed
+    if (events.value.length === 1 && pagination.pageNumber > 0) {
+      pagination.pageNumber -= 1;
+    }
+    loadEvents();
+  } catch (e: any) {
+    const status = e.response?.status;
+
+    if (status === 403) {
+      toast.add({
+        severity: "error",
+        summary: "Failed",
+        detail: "Admin privileges required to delete events",
+        life: 5000,
+      });
+      router.push("/favourites");
+    } else if (status === 404) {
+      toast.add({
+        severity: "warn",
+        summary: "Not Found",
+        detail: "This event no longer exists",
+        life: 4000,
+      });
+      loadEvents();
+    } else {
+      toast.add({
+        severity: "error",
+        summary: "Failed",
+        detail:
+          e.response?.data?.message ??
+          e.response?.data?.error ??
+          e.message ??
+          "Delete failed",
+        life: 5000,
+      });
+    }
+  } finally {
+    deletingId.value = null;
   }
 }
 
