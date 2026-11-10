@@ -206,6 +206,63 @@
           />
         </div>
 
+        <!-- Competition -->
+        <div>
+          <label class="block text-sm text-gray-400 mb-1.5">Competition</label>
+          <Select
+            v-model="editForm.competition"
+            :options="editCompetitionOptions"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Select competition"
+            fluid
+          />
+        </div>
+
+        <!-- Status & Round -->
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm text-gray-400 mb-1.5">Status</label>
+            <Select
+              v-model="editForm.status"
+              :options="editStatusOptions"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Select status"
+              fluid
+            />
+          </div>
+          <div>
+            <label class="block text-sm text-gray-400 mb-1.5">Round</label>
+            <InputNumber
+              v-model="editForm.round"
+              :min="0"
+              :showButtons="false"
+              fluid
+            />
+          </div>
+        </div>
+
+        <!-- Location & External Link -->
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm text-gray-400 mb-1.5">Location</label>
+            <InputText
+              v-model="editForm.location"
+              placeholder="Location"
+              fluid
+            />
+          </div>
+          <div>
+            <label class="block text-sm text-gray-400 mb-1.5">External Link</label>
+            <InputText
+              v-model="editForm.externalLink"
+              placeholder="https://example.com/match"
+              fluid
+            />
+          </div>
+        </div>
+
         <!-- Football scores -->
         <template v-if="activeTab === 'football'">
           <div class="grid grid-cols-2 gap-4">
@@ -236,13 +293,48 @@
           </div>
         </template>
 
-        <!-- Motorsport winner -->
+        <!-- Motorsport details -->
         <template v-else>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm text-gray-400 mb-1.5">Season</label>
+              <InputNumber
+                v-model="editForm.season"
+                :min="1"
+                :showButtons="false"
+                fluid
+              />
+            </div>
+            <div>
+              <label class="block text-sm text-gray-400 mb-1.5">Race Name</label>
+              <InputText
+                v-model="editForm.raceName"
+                placeholder="Race name"
+                fluid
+              />
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm text-gray-400 mb-1.5">Circuit Name</label>
+            <InputText
+              v-model="editForm.circuitName"
+              placeholder="Circuit name"
+              fluid
+            />
+          </div>
           <div>
             <label class="block text-sm text-gray-400 mb-1.5">Winner</label>
             <InputText
               v-model="editForm.winner"
               placeholder="Winner name"
+              fluid
+            />
+          </div>
+          <div>
+            <label class="block text-sm text-gray-400 mb-1.5">Flag URL</label>
+            <InputText
+              v-model="editForm.flagUrl"
+              placeholder="https://example.com/flag.png"
               fluid
             />
           </div>
@@ -260,6 +352,7 @@
             label="Save"
             icon="pi pi-check"
             :loading="saving"
+            :disabled="!canSaveEdit"
             @click="saveEdit()"
           />
         </div>
@@ -286,6 +379,7 @@ import { useFormatters } from "~/composables/useFormatters";
 import type {
   AdminFootballEvent,
   AdminMotorsportEvent,
+  EventStatus,
   FootballEventUpdateRequest,
   MotorsportEventUpdateRequest,
 } from "~/types/admin";
@@ -357,6 +451,8 @@ const statusOptions = [
   { label: "Completed", value: "COMPLETED" },
 ];
 
+const editStatusOptions = statusOptions.filter((o) => o.value !== null);
+
 const compOptions = ref<{ label: string; value: string }[]>([]);
 const footballCompOptions = ref<{ label: string; value: string }[]>([]);
 const motorsportCompOptions = ref<{ label: string; value: string }[]>([]);
@@ -398,10 +494,20 @@ function updateCompOptions() {
       : motorsportCompOptions.value;
 }
 
+const editCompetitionOptions = computed(() => {
+  const source =
+    activeTab.value === "football"
+      ? footballCompOptions.value
+      : motorsportCompOptions.value;
+  return source.filter((o) => o.value);
+});
+
 watch(activeTab, () => {
   pagination.pageNumber = 0;
   filters.competition = null;
   filters.status = null;
+  editDialogVisible.value = false;
+  editingEvent.value = null;
   loadEvents();
 });
 
@@ -456,14 +562,40 @@ const editingEvent = ref<any>(null);
 
 const editForm = reactive<{
   dateTime: Date | null;
+  competition: string;
+  status: string;
+  round: number | null;
+  location: string;
+  externalLink: string;
   homeScore: number | null;
   awayScore: number | null;
+  season: number | null;
+  raceName: string;
+  circuitName: string;
   winner: string;
+  flagUrl: string;
 }>({
   dateTime: null,
+  competition: "",
+  status: "",
+  round: null,
+  location: "",
+  externalLink: "",
   homeScore: null,
   awayScore: null,
+  season: null,
+  raceName: "",
+  circuitName: "",
   winner: "",
+  flagUrl: "",
+});
+
+const canSaveEdit = computed(() => {
+  if (!editForm.dateTime) return false;
+  if (!editForm.competition) return false;
+  if (!editForm.status) return false;
+  if (activeTab.value === "motorsport" && !editForm.raceName.trim()) return false;
+  return true;
 });
 
 const editDialogTitle = computed(() => {
@@ -478,13 +610,32 @@ const editDialogTitle = computed(() => {
 function openEditDialog(event: any) {
   editingEvent.value = event;
   editForm.dateTime = new Date(event.dateTime);
+  editForm.competition = event.competition?.name ?? "";
+  editForm.status = event.status ?? "";
+  editForm.round = event.round ?? null;
+  editForm.location = event.location ?? "";
+  editForm.externalLink = event.externalLink ?? "";
   if (activeTab.value === "football") {
     editForm.homeScore = (event as any).homeScore ?? null;
     editForm.awayScore = (event as any).awayScore ?? null;
   } else {
+    editForm.season = (event as any).season ?? null;
+    editForm.raceName = (event as any).raceName ?? "";
+    editForm.circuitName = (event as any).circuitName ?? "";
     editForm.winner = (event as any).winner ?? "";
+    editForm.flagUrl = (event as any).flagUrl ?? "";
   }
   editDialogVisible.value = true;
+}
+
+function emptyToNull(value: string): string | null {
+  const trimmed = value.trim();
+  return trimmed === "" ? null : trimmed;
+}
+
+function toLocalDateTimeString(d: Date): string {
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}:00`;
 }
 
 async function saveEdit() {
@@ -492,17 +643,33 @@ async function saveEdit() {
 
   saving.value = true;
   try {
+    const dateTime = toLocalDateTimeString(editForm.dateTime);
+
     if (activeTab.value === "football") {
       const request: FootballEventUpdateRequest = {
-        dateTime: editForm.dateTime.toISOString(),
+        dateTime,
+        competition: editForm.competition,
+        status: editForm.status as EventStatus,
+        round: editForm.round,
+        location: emptyToNull(editForm.location),
+        externalLink: emptyToNull(editForm.externalLink),
         homeScore: editForm.homeScore,
         awayScore: editForm.awayScore,
       };
       await updateFootballEvent(editingEvent.value.id, request);
     } else {
       const request: MotorsportEventUpdateRequest = {
-        dateTime: editForm.dateTime.toISOString(),
-        winner: editForm.winner || null,
+        dateTime,
+        competition: editForm.competition,
+        status: editForm.status as EventStatus,
+        round: editForm.round,
+        season: editForm.season,
+        location: emptyToNull(editForm.location),
+        externalLink: emptyToNull(editForm.externalLink),
+        raceName: editForm.raceName.trim(),
+        circuitName: emptyToNull(editForm.circuitName),
+        winner: emptyToNull(editForm.winner),
+        flagUrl: emptyToNull(editForm.flagUrl),
       };
       await updateMotorsportEvent(editingEvent.value.id, request);
     }
@@ -517,12 +684,31 @@ async function saveEdit() {
     editDialogVisible.value = false;
     loadEvents();
   } catch (e: any) {
-    toast.add({
-      severity: "error",
-      summary: "Failed",
-      detail: e.response?.data?.message ?? e.message ?? "Update failed",
-      life: 5000,
-    });
+    const status = e.response?.status;
+
+    if (status === 403) {
+      toast.add({
+        severity: "error",
+        summary: "Failed",
+        detail: "Admin privileges required to edit events",
+        life: 5000,
+      });
+      router.push("/favourites");
+    } else if (status === 409 || status === 400) {
+      toast.add({
+        severity: "error",
+        summary: "Failed",
+        detail: e.response?.data?.message ?? e.message ?? "Update failed",
+        life: 5000,
+      });
+    } else {
+      toast.add({
+        severity: "error",
+        summary: "Failed",
+        detail: e.response?.data?.message ?? e.message ?? "Update failed",
+        life: 5000,
+      });
+    }
   } finally {
     saving.value = false;
   }
@@ -552,11 +738,11 @@ function statusBadgeClass(status: string): string {
 }
 
 function formatCompetition(competition: any): string {
-  const name = typeof competition === "string" ? competition : competition?.displayName ?? competition?.name ?? "";
+  const name: string = typeof competition === "string" ? competition : competition?.displayName ?? competition?.name ?? "";
   return name
     .toLowerCase()
     .split("_")
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(" ");
 }
 </script>
