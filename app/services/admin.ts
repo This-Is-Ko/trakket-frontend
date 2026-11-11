@@ -118,3 +118,13 @@ export async function updateMotorsportEvent(
     const res = await api.put(`/api/admin/events/motorsport/${id}`, request);
     return res.data;
 }
+
+export async function deleteFootballEvent(id: number): Promise<void> {
+    const api = createApi();
+    await api.delete(`/api/admin/events/football/${id}`);
+}
+
+export async function deleteMotorsportEvent(id: number): Promise<void> {
+    const api = createApi();
+    await api.delete(`/api/admin/events/motorsport/${id}`);
+}
